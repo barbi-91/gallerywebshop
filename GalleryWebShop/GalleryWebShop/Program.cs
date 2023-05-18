@@ -1,6 +1,8 @@
 using GalleryWebShop.Areas.Identity.Data;
 using GalleryWebShop.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace GalleryWebShop
 {
@@ -17,6 +19,7 @@ namespace GalleryWebShop
 
             //Service that the ApplicationUser class is the main one for user identification
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
+            .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
             // Add services to the container.
@@ -38,10 +41,33 @@ namespace GalleryWebShop
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
+            //application settings for handling decimal value
+            var ci = new CultureInfo("de-De");
+            ci.NumberFormat.NumberDecimalSeparator = ".";
+            ci.NumberFormat.CurrencyDecimalSeparator = ".";
+
+            app.UseRequestLocalization(
+                    new RequestLocalizationOptions
+                    {
+                        DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(ci),
+                        SupportedCultures = new List<CultureInfo> { ci },
+                        SupportedUICultures = new List<CultureInfo> { ci },
+                    }
+                );
+
             app.UseRouting();
-            app.UseAuthentication(); 
+            app.UseAuthentication();
 
             app.UseAuthorization();
+
+            // Set admin roll
+            app.MapAreaControllerRoute(
+            name: "Admin",
+            areaName: "Admin",
+            pattern: "admin/{Controller}/{action}/{id?}"
+            );
+
 
             app.MapControllerRoute(
                 name: "default",

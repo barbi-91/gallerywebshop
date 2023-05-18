@@ -11,14 +11,14 @@ public class ApplicationUser : IdentityUser
 {
     [Required]
     [Column(TypeName = "nvarchar(256)")]
-    public string FirstName { get; set; }  = string.Empty;
+    public string FirstName { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(256)")]
-    public string LastName { get; set; } = string.Empty;
+    public string LastName { get; set; }
 
     [Required]
     [Column(TypeName = "nvarchar(256)")]
-    public string Address { get; set; } = string.Empty;
+    public string Address { get; set; }
 }
 

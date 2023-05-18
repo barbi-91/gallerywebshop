@@ -1,0 +1,31 @@
+﻿@*To see this partial view, user login is required and his role must be administrator*@
+
+@*Use the same logs used by _loginPartial:*@
+@using Microsoft.AspNetCore.Identity
+@using GalleryWebShop.Areas.Identity.Data
+
+@*uses @injection to inject classes and objects into this view and be able to access certain built-in methods*@
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager 
+
+@if (
+SignInManager.IsSignedIn(User) &&
+await UserManager.IsInRoleAsync(
+    UserManager.GetUserAsync(User).Result,
+    "admin"
+)
+)
+{
+    <div class="dropdown">
+        <a class="btn nav-link dropdown-toggle" id="dropdownAdmin" data-bs-toggle="dropdown">Admin</a>
+        <ul class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" type="button" asp-area="admin" asp-controller="categories" asp-action="index">Categories</a>
+            </li>
+            <li>
+                <a class="dropdown-item" type="button" asp-area="admin" asp-controller="products" asp-action="index">Products</a>
+            </li>
+
+        </ul>
+    </div>
+}

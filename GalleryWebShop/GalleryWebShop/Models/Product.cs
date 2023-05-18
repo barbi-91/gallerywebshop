@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
+using System.Security.AccessControl;
 
 namespace GalleryWebShop.Models
 {
@@ -13,14 +15,17 @@ namespace GalleryWebShop.Models
         //stock keeping unit
         [Required]
         [Column(TypeName = "nvarchar(10)")]
-        public string Sku { get; set; } = String.Empty;
+        [DisplayName("Stock keeping unit")]
+        public string Sku { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]
         [Column(TypeName = "nvarchar")]
-        public string Title { get; set; } = String.Empty;
+        [DisplayName("Painting title")]
+        public string Title { get; set; }
 
         [Column(TypeName = "ntext")]
+        [DisplayName("Painting description")]
         public string? Description { get; set; }
 
         [Required]

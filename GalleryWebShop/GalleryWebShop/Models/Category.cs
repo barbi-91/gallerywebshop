@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 
 namespace GalleryWebShop.Models
 {
@@ -12,9 +13,11 @@ namespace GalleryWebShop.Models
         [Required]
         [StringLength(256, MinimumLength = 2)]
         [Column(TypeName = "nvarchar")]
-        public string Title { get; set; } = String.Empty;
+        [DisplayName("Technique")]
+        public string Title { get; set; }
 
         [Column(TypeName = "ntext")]
+        [DisplayName("Technique description")]
         public string? Description { get; set; }
 
         [Column(TypeName = "nvarchar(200)")]

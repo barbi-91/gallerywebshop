@@ -1,0 +1,21 @@
+﻿@using GalleryWebShop.Data;
+
+@inject ApplicationDbContext _dbContext
+
+<div class="form-group">
+    <lable class="contorl-lable"> Select painting technique </lable>
+
+    <select class="form-control" name="categoryIds[]" multiple>
+        @foreach (var categoryItem in _dbContext.Categories.ToList())
+        {
+            <!option value="@categoryItem.Id"
+                @if(ViewBag.ProductCategories != null)
+                {
+                    @(ViewBag.ProductCategories.Contains(categoryItem.Id) ? "selected" : "" )
+                }
+            >
+            @categoryItem.Title
+            </!option>
+        }
+    </select>
+</div>

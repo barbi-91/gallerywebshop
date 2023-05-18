@@ -97,6 +97,27 @@ namespace GalleryWebShop.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "a7966536-0d4c-4a62-ae00-88a09ab5a000",
+                            AccessFailedCount = 0,
+                            Address = "Ulica grada Vukovara 22",
+                            ConcurrencyStamp = "cfb1f5f6-be1d-4234-ae35-487a8ee5cb47",
+                            Email = "ana@gmail.com",
+                            EmailConfirmed = false,
+                            FirstName = "Ana",
+                            LastName = "Programerić",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ANA@GMAIL.COM",
+                            NormalizedUserName = "ANA@GMAIL.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKgASBU4ye9nbLbxhmCgoDqF2Ds0YtpjrrXSevUMPFcu4QpChoyscW9ehJCX+uzB8A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "aece8c6c-cd67-49d0-94b6-c74875b07fb8",
+                            TwoFactorEnabled = false,
+                            UserName = "ana@gmail.com"
+                        });
                 });
 
             modelBuilder.Entity("GalleryWebShop.Models.Category", b =>
@@ -120,7 +141,23 @@ namespace GalleryWebShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Acrylic paints are water-based and acrylic paint tends to be more vibrant in color due to its fast dry time.",
+                            Image = "",
+                            Title = "Acril"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "A type of paint that dries slowly and consists of pigment particles suspended in oil for drying, mostly linseed oil.",
+                            Image = "",
+                            Title = "Oil"
+                        });
                 });
 
             modelBuilder.Entity("GalleryWebShop.Models.Order", b =>
@@ -150,7 +187,7 @@ namespace GalleryWebShop.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("GalleryWebShop.Models.OrderItem", b =>
@@ -182,7 +219,7 @@ namespace GalleryWebShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("GalleryWebShop.Models.Product", b =>
@@ -216,7 +253,29 @@ namespace GalleryWebShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Seascape using the acrylic  on canvas technique",
+                            Image = "",
+                            InStock = 1m,
+                            Price = 250.00m,
+                            Sku = "1dfd314716",
+                            Title = "Seascape 001"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Bird portrait using the oil on canvas technique.",
+                            Image = "",
+                            InStock = 1m,
+                            Price = 320.00m,
+                            Sku = "4632ec6f16",
+                            Title = "Bird 001"
+                        });
                 });
 
             modelBuilder.Entity("GalleryWebShop.Models.ProductCategory", b =>
@@ -239,7 +298,7 @@ namespace GalleryWebShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -267,6 +326,22 @@ namespace GalleryWebShop.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "cd565eeb-2aa6-4d57-b195-61fc9aa24d7b",
+                            ConcurrencyStamp = "17c81f6d-49b1-4909-8d40-7ddf8ebd899a",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "eb4dfb7e-763f-4109-8de3-fd3e59219d80",
+                            ConcurrencyStamp = "83d276bb-bfb0-4401-901b-3aa58787f90c",
+                            Name = "Customer",
+                            NormalizedName = "CUSTOMER"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -356,6 +431,13 @@ namespace GalleryWebShop.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "a7966536-0d4c-4a62-ae00-88a09ab5a000",
+                            RoleId = "cd565eeb-2aa6-4d57-b195-61fc9aa24d7b"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
