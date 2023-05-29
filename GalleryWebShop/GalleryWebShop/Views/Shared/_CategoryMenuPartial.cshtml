@@ -1,0 +1,33 @@
+﻿@*To see this partial view, user login is required and his role must be administrator*@
+
+@*Use the same logs used by _loginPartial:*@
+@using GalleryWebShop.Data;
+@using Microsoft.AspNetCore.Identity
+@using GalleryWebShop.Areas.Identity.Data
+
+
+@*uses @injection to inject classes and objects into this view and be able to access certain built-in methods*@
+
+@inject ApplicationDbContext _dbContext
+
+@*If user is signedIn and If user have specific role-admin*@
+
+<div class="dropdown">
+@*<a class="nav-link text-dark" asp-area="admin" asp-controller="categories" asp-action="index">Categories</a>*@
+
+<a class="nav-link text-dark btn dropdown-toggle" id="dropdownCategory" data-bs-toggle="dropdown">Categories</a>
+    <ul class="dropdown-menu">
+                @foreach (var categoryItem in _dbContext.Categories.ToList())
+                {
+                    <li>
+                        <a 
+                            class="dropdown-item" 
+                            type="button" 
+                            asp-controller="Home"
+                            asp-action="ProductByCategory">
+                        @categoryItem.Title
+                        </a>
+                    </li>
+                }
+    </ul>
+</div>

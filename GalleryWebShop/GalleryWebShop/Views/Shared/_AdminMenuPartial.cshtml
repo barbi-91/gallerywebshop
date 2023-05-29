@@ -8,6 +8,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager 
 
+@*If user is signedIn and If user have specific role-admin*@
 @if (
 SignInManager.IsSignedIn(User) &&
 await UserManager.IsInRoleAsync(

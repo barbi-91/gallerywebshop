@@ -3,8 +3,6 @@ using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System.Collections.Generic;
 
 namespace GalleryWebShop.Data;
 
@@ -16,7 +14,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Order> Orders { get; set; }
     public DbSet<ProductCategory> ProductCategories { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
-
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

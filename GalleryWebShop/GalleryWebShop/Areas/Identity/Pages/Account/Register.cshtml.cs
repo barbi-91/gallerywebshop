@@ -136,7 +136,7 @@ namespace GalleryWebShop.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
 
-                //Dodjeljivanje vrijdnosti klasi user iz html forme registracije
+                //Add value to class User from html form registration
                 user.FirstName = Input.FirstName;
                 user.LastName = Input.LastName;
                 user.Address = Input.Address;
@@ -148,7 +148,7 @@ namespace GalleryWebShop.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
 
-                    // Dodaj ulogu korisniku koji se registrira preko stranice (Customer)
+                    // Add customer role (regiter on Website) - Customer  
                     var customerRole = _roleManager.FindByNameAsync("Customer").Result;
                     if (customerRole != null)
                     {

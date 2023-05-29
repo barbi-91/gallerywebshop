@@ -82,7 +82,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         "wwwroot/images/products",
                         imageName
                         );
-
+                    //Creating Directory using path
                     Directory.CreateDirectory(Path.GetDirectoryName(saveImagePath));
                     using (var stream = new FileStream(saveImagePath, FileMode.Create))
                     {
@@ -111,6 +111,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     _context.ProductCategories.Add(productCategory);
                 }
                 await _context.SaveChangesAsync();
+                 
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -150,7 +151,8 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             IFormFile? newImage
             )
         {
-            if (id != product.Id)
+              
+                 if (id != product.Id)
             {
                 return NotFound();
             }
