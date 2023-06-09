@@ -21,11 +21,12 @@
                 {
                     <li>
                         <a 
-                            class="dropdown-item" 
-                            type="button" 
+                            class="dropdown-item"
+                            type="button"
                             asp-controller="Home"
-                            asp-action="ProductByCategory">
-                        @categoryItem.Title
+                            asp-action="ProductByCategory"
+                            asp-route-catById="@categoryItem.Id">
+                            @categoryItem.Title
                         </a>
                     </li>
                 }

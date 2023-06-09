@@ -21,9 +21,9 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // GET: Admin/Products
         public async Task<IActionResult> Index()
         {
-              return _context.Products != null ? 
-                          View(await _context.Products.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Products'  is null.");
+            return _context.Products != null ?
+                        View(await _context.Products.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Products'  is null.");
         }
 
         // GET: Admin/Products/Details/5
@@ -57,8 +57,8 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Sku,Title,Description,InStock,Price,Image")] Product product, 
-            int[] categoryIds, 
+            [Bind("Id,Sku,Title,Description,InStock,Price,Image")] Product product,
+            int[] categoryIds,
             IFormFile Image)
         {
             // Check if parametar categoryIds is empty or null
@@ -111,7 +111,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     _context.ProductCategories.Add(productCategory);
                 }
                 await _context.SaveChangesAsync();
-                 
+
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -120,7 +120,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // GET: Admin/Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Products == null)  
+            if (id == null || _context.Products == null)
             {
                 return NotFound();
             }
@@ -146,26 +146,24 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Sku,Title,Description,InStock,Price,Image")] Product product, 
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Sku,Title,Description,InStock,Price,Image")] Product product,
             int[] categoryIds,
             IFormFile? newImage
             )
         {
-              
-                 if (id != product.Id)
+            if (id != product.Id)
             {
                 return NotFound();
             }
-
             // Check if parametar categoryIds is empty or null
             if (categoryIds.Length == 0 || categoryIds == null)
             {
                 TempData["ErrorMessage"] = "Please select at least one category!";
-                return RedirectToAction(nameof(Edit), new {id = id});
+                return RedirectToAction(nameof(Edit), new { id = id });
             }
 
             // Match the productId with the items of the categoryIds array and store everything in the ProductCategories table
-            
+
 
             if (ModelState.IsValid)
             {
@@ -191,6 +189,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     }
                     _context.Update(product);
                     await _context.SaveChangesAsync();
+                    //Update product category in table ProductCategories
                     _context.ProductCategories.RemoveRange(_context.ProductCategories.Where(p => p.ProductId == id));
                     _context.SaveChanges();
 
@@ -252,8 +251,8 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             {
                 if (!String.IsNullOrWhiteSpace(product.Image))
                 {
-                    var deleteImageFromPath = Path.Combine(Directory.GetCurrentDirectory(),
-                        "wwwrooot/images/products",
+                     var deleteImageFromPath = Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot/images/products",
                         product.Image
                     );
                     if (System.IO.File.Exists(deleteImageFromPath))
@@ -263,14 +262,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 }
                 _context.Products.Remove(product);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-          return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Products?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

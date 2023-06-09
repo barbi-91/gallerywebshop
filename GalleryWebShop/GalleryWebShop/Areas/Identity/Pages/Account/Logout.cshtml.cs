@@ -10,9 +10,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using DemoWebshop.Controllers;
+using GalleryWebShop.Common;
+using GalleryWebShop.Services.Cart;
+using Microsoft.AspNetCore.Http;
+using GalleryWebShop.Services;
 
 namespace GalleryWebShop.Areas.Identity.Pages.Account
 {
+    
     public class LogoutModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -28,6 +34,7 @@ namespace GalleryWebShop.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+            HttpContext.Session.Remove(Helper.SessionCartKey);
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);

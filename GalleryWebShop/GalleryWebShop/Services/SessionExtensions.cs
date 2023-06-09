@@ -1,18 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using GalleryWebShop.Services.Cart;
+using Newtonsoft.Json;
 
 namespace GalleryWebShop.Services
 {
     public static class SessionExtensions
     {
-        //2metode extenzije
-        //1 citanje
-        //2 dohvat
-
-        //serilaziranje
+        //serialize
         public static void SetCartObjectAsJson(
             this ISession session,
             string key,
-            object value
+            object value   
             )
         {
             session.SetString(
@@ -21,13 +18,14 @@ namespace GalleryWebShop.Services
                 );
         }
 
-        //deserijaliziranje
-        public static List<CartItem> GetCartObjectFromJson(
+        //deserialize
+        public static List<CartItem>GetCartObjectFromJson(
             this ISession session,
             string key
             )
         {
             var value = session.GetString(key);
+                        
             return value == null ? new List<CartItem>() : JsonConvert.DeserializeObject<List<CartItem>>(value);
         }
 

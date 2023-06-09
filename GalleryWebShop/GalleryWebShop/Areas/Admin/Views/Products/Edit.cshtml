@@ -43,18 +43,18 @@
                 <input asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
+            @*show if img is exist*@
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input  type="hidden" asp-for="Image" class="form-control" />
+                <input type="hidden" asp-for="Image" class="form-control" />
                 <img src="~/images/products/@Model.Image" width="384" height="256" />
             </div>
-
+            @*if img exist,  update to new img *@
             <div class="form-group">
                 <label class="control-lable">Upload new image</label>
-                <span asp-validation-for="Image" class="text-danger"></span>
                 <input type="file" name="newImage" class="form-control" />
             </div>
-
+             
             <partial name="~/Areas/Admin/Views/Shared/_CategoryDropdownPartial.cshtml"></partial>
 
             <div class="form-group">

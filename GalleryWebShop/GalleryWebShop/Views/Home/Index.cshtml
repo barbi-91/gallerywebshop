@@ -12,9 +12,22 @@
 </div>
 
 
+
+
 <form method="get" asp-area="" asp-controller="Home" asp-action="Index" class="row mb-5">
     <div class="col-6">
         <input type="text" class="form-control" name="searchQuery" />
+    </div>
+
+    <div class="col-3">
+        <select class="form-select" id="floatingSelect" name="categoryId">
+            <option selected value="0">All categories</option>
+            @foreach (var category in ViewBag.Categories)
+            {
+                <option value="@category.Id">@category.Title</option>
+            }
+
+        </select>
     </div>
 
     <div class="col-3">
@@ -38,26 +51,28 @@
     @foreach (var item in Model)
     {
         <div class="card col-4 mb-3">
-            @{
-                string setImage = !String.IsNullOrEmpty(item.Image) ? "~/images/products/" + item.Image : "~/images/default-placeholder.png";
-            }
+            <div class="card">
+                @{
+                    string setImage = !String.IsNullOrEmpty(item.Image) ? "~/images/products/" + item.Image : "~/images/default-placeholder.png";
+                }
 
-            <img src="@Url.Content(setImage)" class="card-img-top" alt="art image">
+                <img src="@Url.Content(setImage)" class="card-img-top" alt="art image">
 
-            <div class="card-body">
-                <h5 class="card-title">@item.Title</h5>
-                <p class="card-text">@item.Description</p>
-                <p class="card-text">@item.Price.ToString("C2")</p>
+                <div class="card-body">
+                    <h5 class="card-title">@item.Title</h5>
+                    <p class="card-text">@item.Description</p>
+                    <p class="card-text">@item.Price.ToString("C2")</p>
 
-                @* <p>
-            <form method="POST" asp-area="" asp-controller="Cart" asp-action="AddToCart">
-            <input type="hidden" name="productId" value="@item.Id" />
-            <input type="number" name="quantity" class="form-control" , min="1.00" , max="@item.InStock" value="1.00" />
-            <button type="submit" class="btn btn-success">
-            Add to cart
-            </button>
-            </form>
-            </p>*@
+                    <p>
+                        <form method="POST" asp-area="" asp-controller="Cart" asp-action="AddToCart">
+                            <input type="hidden" name="productId" value="@item.Id" />
+                            <input type="number" name="quantity" class="form-control" , min="1.00" , max="@item.InStock" value="1.00" />
+                            <button type="submit" class="btn btn-success">
+                                Add to cart
+                            </button>
+                        </form>
+                    </p>
+                </div>
             </div>
         </div>
     }

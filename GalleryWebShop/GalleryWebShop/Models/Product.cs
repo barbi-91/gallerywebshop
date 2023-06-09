@@ -14,6 +14,7 @@ namespace GalleryWebShop.Models
 
         //stock keeping unit
         [Required]
+        [StringLength(10, MinimumLength = 1)]
         [Column(TypeName = "nvarchar(10)")]
         [DisplayName("Stock keeping unit")]
         public string Sku { get; set; }

@@ -4,38 +4,37 @@
     ViewData["Title"] = "ProductByCategory";
 }
 
-<h1>ProductByCategory</h1>
+<h1>Technique: @ViewBag.CatTitle</h1>
+<hr />
+<div class="row">
+    @foreach (var item in Model)
+    {
+        {
+            <div class="card col-4 mb-3">
+                <div class="card">
+                    @{
+                        string setImage = !String.IsNullOrEmpty(item.Product.Image) ? "~/images/products/" + item.Product.Image : "~/images/default-placeholder.png";
+                    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Product)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Product.Sku)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    <img src="@Url.Content(setImage)" class="card-img-top" alt="art image">
+
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Product.Title</h5>
+                        <p class="card-text">@item.Product.Description</p>
+                        <p class="card-text">@item.Product.Price.ToString("C2")</p>
+
+                        <p>
+                            <form method="POST" asp-area="" asp-controller="Cart" asp-action="AddToCart">
+                                <input type="hidden" name="productId" value="@item.Id" />
+                                <input type="number" name="quantity" class="form-control" , min="1.00" , max="@item.Product.InStock" value="1.00" />
+                                <button type="submit" class="btn btn-success">
+                                    Add to cart
+                                </button>
+                            </form>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

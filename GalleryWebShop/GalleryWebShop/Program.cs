@@ -41,7 +41,7 @@ namespace GalleryWebShop
 
            
 
-            //Kreiraj servis za sesiju
+            //Create service for sesion
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession();
 
@@ -77,6 +77,9 @@ namespace GalleryWebShop
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            //Aded session
+            app.UseSession();
 
             // Set admin roll for area acces
             app.MapAreaControllerRoute(

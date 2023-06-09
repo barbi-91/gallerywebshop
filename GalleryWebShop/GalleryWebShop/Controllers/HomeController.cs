@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace GalleryWebShop.Controllers
 {
-    
+
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -16,13 +16,26 @@ namespace GalleryWebShop.Controllers
         public HomeController(ILogger<HomeController> logger, ApplicationDbContext dbContext)
         {
             _logger = logger;
-            _dbContext= dbContext;
+            _dbContext = dbContext;
         }
 
-        public IActionResult Index(string? searchQuery, int orderBy = 0)
+        public IActionResult Index(string? searchQuery, int? categoryId, int orderBy = 0)
         {
             // Show all products from database table 
             List<Product> products = _dbContext.Products.ToList();
+
+            //If param "category" is not 0, filter product by category
+            if(categoryId > 0)
+            {
+                products = products
+                    .Where(p => 
+                        _dbContext.ProductCategories
+                        .Where(pc => pc.CategoryId == categoryId)
+                        .Select(pc => pc.ProductId)
+                        .ToList()
+                        .Contains(p.Id))
+                    .ToList();
+            }
 
             // 2. If parameter "serachQuery" not empty and not null,search for the keyword in the title
             if (!String.IsNullOrWhiteSpace(searchQuery))
@@ -45,18 +58,26 @@ namespace GalleryWebShop.Controllers
                 default: break;
             }
 
+
+            ViewBag.Categories = _dbContext.Categories.ToList();
+
             //returns collection of products
             return View(products);
         }
 
-        public IActionResult ProductByCategory()
-         {
-            //return View(_dbContext.ProductCategories
-            //    .Include(prod => prod.Product)
-            //    .Include(cat => cat.Category)
-            //    .ToList());
+        //using navigation property with method Include to get data from related tables (foreign key)
+        public IActionResult ProductByCategory(int catById)
+        {
+            var title = _dbContext.Categories.Where(c => c.Id == catById).Select(t => t.Title).Single();
+            ViewBag.CatTitle = title;
+            // Show all products from database table 
+            List<ProductCategory> productsByCategory = _dbContext.ProductCategories
+                .Where(p => p.CategoryId == catById)
+                .Include(c => c.Category)
+                .Include(p => p.Product)
+                .ToList();
 
-            return View(_dbContext.ProductCategories.ToList());
+            return View(productsByCategory);
         }
 
         public IActionResult Privacy()

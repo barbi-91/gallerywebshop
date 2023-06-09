@@ -1,5 +1,7 @@
-﻿using GalleryWebShop.Data;
+﻿using GalleryWebShop.Common;
+using GalleryWebShop.Data;
 using GalleryWebShop.Services;
+using GalleryWebShop.Services.Cart;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoWebshop.Controllers
@@ -7,11 +9,6 @@ namespace DemoWebshop.Controllers
     public class CartController : Controller
     {
         public readonly ApplicationDbContext _dbContext;
-
-
-        //Ključ nase sesije za kosaricu -const samo jednom podesi i ona je samo read only
-        public const string sessionCartKey = "_cart";
-
         public CartController(ApplicationDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -23,7 +20,7 @@ namespace DemoWebshop.Controllers
         {
 
             //Korak 1: Provjeri kosaricu iz sesije
-            List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(sessionCartKey);
+            List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(Helper.SessionCartKey);
 
             // KOrak 2: Provjeri errror poruku
             ViewBag.CartErrorMessage = TempData["CartErrorrMessage"] as string ?? "";
@@ -32,10 +29,10 @@ namespace DemoWebshop.Controllers
             return View(cart);
         }
 
-        //TODO: AddToCart(int productId, decimal qunantity)
-        //GET: Cart/AssToCart(int productId, decimal quantitiy)
+        //POST: Cart/AddToCart(int productId, decimal quantitiy)
         public IActionResult AddToCart(int productId, decimal quantity)
-        {
+         {
+            //EXTRA VALIDATION
             if (quantity <= 0)
             {
                 return RedirectToAction(nameof(Index), "Home");
@@ -44,7 +41,8 @@ namespace DemoWebshop.Controllers
             /*
              * 2 Moguca scenarija: 
              * - 1kosarica je prazna: 
-             *          -a)kreiraj objekt klase CartItem i popuni ga sa podacima,dodaj u kolekciju, pa spremi u sesiju
+             *          -a)kreiraj objekt klase CartItem i popuni ga sa podacima,dodaj u kolekciju, pa 
+             *          spremi u sesiju
              * - 2košarica nije prazna: 
              *          -a)proizvod postoji vec i azururaj kolicniu i pohrani oper sve u sesiju
              *          -b)proizvod ne postoji u kosarici , dodajga, azuriraj sve i dodaj u sesiju
@@ -60,10 +58,7 @@ namespace DemoWebshop.Controllers
 
             // Korak 2: Provjeri sesiju
             // ova metoda vrca ili praznu ili punu kolekciju
-            List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(sessionCartKey);
-
-
-
+            List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(Helper.SessionCartKey);
 
             // Korak 3: uvjeti za krositinje kosarice
             if (cart.Count == 0)
@@ -84,7 +79,7 @@ namespace DemoWebshop.Controllers
                 // Dodaj stavku u kolekciju kosarice
                 cart.Add(newItem);
                 //Azuriraj sesiju za kosaricu
-                HttpContext.Session.SetCartObjectAsJson(sessionCartKey, cart);
+                HttpContext.Session.SetCartObjectAsJson(Helper.SessionCartKey, cart);
             }
             else
             {
@@ -112,45 +107,27 @@ namespace DemoWebshop.Controllers
                 }
 
                 //Azuriraj sesiju
-                HttpContext.Session.SetCartObjectAsJson(sessionCartKey, cart);
+                HttpContext.Session.SetCartObjectAsJson(Helper.SessionCartKey, cart);
             }
 
 
             return RedirectToAction(nameof(Index));
         }
-
+         
         //DZ - RemoveFromCart(int productId)
         public IActionResult RemoveFromCart(int productId)
         {
             //Korak 1: Pronađi sesiju košarice i dodijeli je varijabli generičke kolekcije cart
-            List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(sessionCartKey);
+            List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(Helper.SessionCartKey);
 
             //Korak 2: Ukloni sve proizvode koji se podudaraju s Id-em parametra(npr.: metodom RemoveAll())
             cart.RemoveAll(cartItem => cartItem.Product.Id == productId);
 
             //Korak 3: Ažuriraj sesiju
-            HttpContext.Session.SetCartObjectAsJson(sessionCartKey, cart);
+            HttpContext.Session.SetCartObjectAsJson(Helper.SessionCartKey, cart);
 
             //Korak 4: Vrati se na stranicu košarice
             return RedirectToAction(nameof(Index));
-        }
-
-        //GET: TestSession()
-        public IActionResult TestSession()
-        {
-
-            //Primjer 1
-
-            //Jednostavan primjer dodvanja sesije po kljucu i vrijdnosti
-            HttpContext.Session.SetString("mojString", "Ovo je moja vrijdnost za string!");
-
-            ViewBag.ReadSessionString = HttpContext.Session.GetString("sessionString");
-
-            // AKo ovdje dodamo novu sesiju ona se prebrise 
-            //Primjer azuiranja vrijdnsoti postijeg kljuca sesije
-            HttpContext.Session.SetString("mojString", "Ja sam neki drugi text!");
-
-            return View();
         }
     }
 }
