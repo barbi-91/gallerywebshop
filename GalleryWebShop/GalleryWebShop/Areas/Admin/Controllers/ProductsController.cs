@@ -23,7 +23,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         {
             return _context.Products != null ?
                         View(await _context.Products.ToListAsync()) :
-                        Problem("Entity set 'ApplicationDbContext.Products'  is null.");
+                        Problem("Entity set 'ApplicationDbContext.Products' is null.");
         }
 
         // GET: Admin/Products/Details/5

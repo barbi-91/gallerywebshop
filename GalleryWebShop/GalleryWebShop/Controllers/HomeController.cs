@@ -90,5 +90,24 @@ namespace GalleryWebShop.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+
+        // GET: Home/Details/5
+        public async Task<IActionResult> Details(int itemId)
+        {
+            if (itemId == null || _dbContext.Products == null)
+            {
+                return NotFound();
+            }
+
+            var product = await _dbContext.Products
+                .FirstOrDefaultAsync(m => m.Id == itemId);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            return View(product);
+        }
     }
 }

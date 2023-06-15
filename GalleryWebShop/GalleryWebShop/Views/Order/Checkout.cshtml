@@ -13,7 +13,7 @@
 @if (!String.IsNullOrEmpty(ViewBag.CheckoutMessages))
 {
     <div class="col-12">
-        <p class="alert alert-danger">@Html.Raw(ViewBag.CheckoutMessages)/p>
+        <p class="alert alert-danger">@Html.Raw(ViewBag.CheckoutMessages)</p>
     </div>
 }
 <div class="row">
@@ -89,7 +89,7 @@
 
             <div class="col-md-6 mb-3">
                 <label>Country *</label>
-                <select name="Country" class="form-select">
+                <select name="Country" class="form-select" required>
                     <option value="">-- Select country --</option>
                     <option value="Croatia">Croatia</option>
                     <option value="Slovenia">Slovenia</option>
