@@ -3,6 +3,7 @@ using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using GalleryWebShop.Areas.Identity.Models;
 
 namespace GalleryWebShop.Data;
 
@@ -111,4 +112,6 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
         base.OnModelCreating(builder);
     }
+
+    public DbSet<GalleryWebShop.Areas.Identity.Models.User>? User { get; set; }
 }

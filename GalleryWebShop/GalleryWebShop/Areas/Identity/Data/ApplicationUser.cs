@@ -20,5 +20,6 @@ public class ApplicationUser : IdentityUser
     [Required]
     [Column(TypeName = "nvarchar(256)")]
     public string Address { get; set; }
+
 }
 

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GalleryWebShop.Areas.Admin.Controllers
 {
+
     [Area("Admin")]
     [Authorize(Roles = "Admin")]
 
