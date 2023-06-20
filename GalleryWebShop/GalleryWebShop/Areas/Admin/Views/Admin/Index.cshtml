@@ -23,7 +23,7 @@
     @foreach (User user in Model)
     {
         <tr>
-            <td>@user.Type</td>
+            <td>@user.UserType</td>
             <td>@user.UserName</td>
             <td>@user.FirstName</td>
             <td>@user.LastName</td>
@@ -31,7 +31,9 @@
             <td>@user.Address</td>
             <td>@Html.CheckBoxFor(u => user.EmailConfirmed, new { @disabled = "disabled"})</td>
             <td>
+                <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Details" asp-route-id="@user.UserId">Details</a>
                 <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
+                <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
             </td>
         </tr>
     }

@@ -1,0 +1,20 @@
+﻿@using GalleryWebShop.Data
+@inject ApplicationDbContext _dbContext
+
+<div class="form-group">
+    <lable class="contorl-lable"> Select user type (role) </lable>
+
+    <select class="form-control" name="roleId">
+        @foreach (var role in _dbContext.Roles.ToList())
+        {
+            <!option value="@role.Id"
+                @if(ViewBag.RoleById != null)
+                {
+                    @(ViewBag.RoleById.Contains(role.Id) ? "selected" : "" )
+                }
+            >
+                @role.Name
+                </!option>
+        }
+    </select>
+</div>

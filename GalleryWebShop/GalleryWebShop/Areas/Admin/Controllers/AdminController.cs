@@ -1,6 +1,8 @@
-﻿using GalleryWebShop.Areas.Identity.Data;
+﻿using Castle.Core.Internal;
+using GalleryWebShop.Areas.Identity.Data;
 using GalleryWebShop.Areas.Identity.Models;
 using GalleryWebShop.Data;
+using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -36,16 +38,15 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         _dbContext.UserRoles,
                         u => u.Id,
                         ur => ur.UserId,
-                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.UserName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId}
+                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.UserName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
                     )
                .Join
                     (
                         _dbContext.Roles,
                         ur => ur.RoleId,
                         r => r.Id,
-                        (ur, r) => new User{ Email= ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserName = ur.UserName, Type = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
+                        (ur, r) => new User { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserName = ur.UserName, UserType = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
                     );
-                   
 
             return View(userRole);
         }
@@ -78,14 +79,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     {
                         UserName = user.UserName,
                         Email = user.Email,
-                        FirstName= user.FirstName,
-                        LastName= user.LastName,
-                        Address= user.Address,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        Address = user.Address,
                         EmailConfirmed = user.EmailConfirmed
                     };
 
                     IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
-                    IdentityResult resultRoleInsertion = await _userManager.AddToRoleAsync(appUser, user.Type);
+                    IdentityResult resultRoleInsertion = await _userManager.AddToRoleAsync(appUser, user.UserType);
 
                     if (result.Succeeded && resultRoleInsertion.Succeeded)
                         return RedirectToAction("Index");
@@ -97,7 +98,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 }
                 return View(user);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction(nameof(Create));
@@ -105,19 +106,101 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         }
 
         // GET: AdminController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(string? id)
         {
-            return View();
+            if (id == null || _dbContext.Users == null)
+            {
+                return NotFound();
+            }
+
+            var userById = _dbContext.Users
+                .Join
+                    (
+                        _dbContext.UserRoles,
+                        u => u.Id,
+                        ur => ur.UserId,
+                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.UserName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
+                    )
+               .Join
+                    (
+                        _dbContext.Roles,
+                        ur => ur.RoleId,
+                        r => r.Id,
+                        (ur, r) => new EditUser { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserName = ur.UserName, /*UserType = r.Name,*/ Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
+                    )
+                .Where(uIdr => uIdr.UserId == id).FirstOrDefault();
+
+            if (userById == null)
+            {
+                return NotFound();
+            }
+
+
+            var roleById = _dbContext.Users
+                .Join
+                    (
+                        _dbContext.UserRoles,
+                        u => u.Id,
+                        ur => ur.UserId,
+                        (u, ur) => new { u.Id, ur.RoleId, ur.UserId }
+                    )
+               .Join
+                    (
+                        _dbContext.Roles,
+                        ur => ur.RoleId,
+                        r => r.Id,
+                        (ur, r) => new { IdUser = ur.Id, FkUserRoleUser = ur.UserId, FkUserRoleRole = ur.RoleId, NameRole = r.Name, IdRole = r.Id }
+                    )
+                .Where(u => u.IdUser == id).Select(r => r.IdRole).Single();
+
+            ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? "";
+            ViewBag.RoleById = roleById;
+            return View(userById);
         }
+
 
         // POST: AdminController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult>Edit(string id, [Bind("UserId,UserName,Email,EmailConfirmed, FirstName,LastName,Address")]
+            EditUser user,
+            string roleId)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (id != user.UserId)
+                {
+                    return NotFound();
+                }
+                if (ModelState.IsValid)
+                {
+                    var userById = await _userManager.FindByIdAsync(user.UserId);
+                    //remove old role
+                    var oldRoleNames = await _userManager.GetRolesAsync(userById);
+                    var oldRoleName = oldRoleNames.SingleOrDefault();
+                    if (oldRoleName != null)
+                    {
+                        await _userManager.RemoveFromRoleAsync(userById, oldRoleName);
+                    }
+
+                    //Update user
+                    userById.UserName = user.UserName;
+                    userById.Email = user.Email;
+                    userById.EmailConfirmed = user.EmailConfirmed;
+                    userById.FirstName = user.FirstName;
+                    userById.LastName = user.LastName;
+                    userById.Address = user.Address;
+
+                    await _userManager.UpdateAsync(userById);
+
+                    
+                    //Update role
+                    var roleName = _dbContext.Roles.Where(r => r.Id == roleId).Select(r => r.Name).Single();
+
+                    await _userManager.AddToRoleAsync(userById, roleName);
+
+                }
+                return RedirectToAction(nameof(Index),"Admin");
             }
             catch
             {
