@@ -42,14 +42,14 @@
             <td>@user.Address</td>
             <td>@Html.CheckBoxFor(u => user.EmailConfirmed, new { @disabled = "disabled"})</td>
             <td>
-                <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Details" asp-route-id="@user.UserId">Details</a>
+                <a class="btn btn-sm btn-info" asp-asp-area="admin" asp-controller="Admin" asp-action="Details" asp-route-id="@user.UserId">Details</a>
                 <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
                 <a 
                 @if(ViewBag.Admins != null)
                 {
                     @(ViewBag.Admins.Contains(user.UserId) ? "hidden" : "" )
                 }
-               class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
+               class="btn btn-sm btn-danger" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
             </td>
         </tr>
     }
