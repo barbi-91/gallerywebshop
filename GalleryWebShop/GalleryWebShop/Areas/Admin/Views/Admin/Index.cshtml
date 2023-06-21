@@ -7,6 +7,17 @@
 }
 
 <h1 class="bg-info text-white">All Users</h1>
+
+
+<form method="get" asp-area="Admin" asp-controller="Admin" asp-action="Index" class="row mb-5">
+    <div class="col-6">
+        <input placeholder="Search..." type="text" class="form-control" name="searchQuery" />
+    </div>
+    <div class="col-3">
+        <input type="submit" class="btn btn-success" value="Search by User Name..." />
+    </div>
+</form>
+
 <a asp-action="Create" class="btn btn-secondary">Create a User</a>
 
 <table class="table table-sm table-bordered">
@@ -33,11 +44,16 @@
             <td>
                 <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Details" asp-route-id="@user.UserId">Details</a>
                 <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
-                <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
+                <a 
+                @if(ViewBag.Admins != null)
+                {
+                    @(ViewBag.Admins.Contains(user.UserId) ? "hidden" : "" )
+                }
+               class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
             </td>
         </tr>
     }
 </table>
 
 
-
+@*Todo: ako admin tada nema delete gumba*@

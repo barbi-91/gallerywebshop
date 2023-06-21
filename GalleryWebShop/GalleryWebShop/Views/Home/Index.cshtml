@@ -16,7 +16,7 @@
 
 <form method="get" asp-area="" asp-controller="Home" asp-action="Index" class="row mb-5">
     <div class="col-6">
-        <input type="text" class="form-control" name="searchQuery" />
+        <input placeholder="Search..." type="text" class="form-control" name="searchQuery" />
     </div>
 
     <div class="col-3">
@@ -75,14 +75,7 @@
                     <p>
                         <a asp-controller="Home" asp-action="Details" asp-route-itemId="@item.Id">Details</a>
                     </p>
-                    @*<p>
-                        <form method="GET" asp-area="" asp-controller="Home" asp-action="Details" asp-route-itemId="@item.Id">
-                            <input type="hidden" name="productId" value="@item.Id" />
-                            <button type="submit" class="btn btn-success">
-                                Details
-                            </button>
-                        </form>
-                    </p>*@
+                    
                 </div>
             </div>
         </div>

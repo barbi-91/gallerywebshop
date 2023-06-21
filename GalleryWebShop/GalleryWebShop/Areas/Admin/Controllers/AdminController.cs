@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 
 namespace GalleryWebShop.Areas.Admin.Controllers
@@ -30,9 +31,9 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         }
 
         // GET: AdminController
-        public ActionResult Index()
+        public ActionResult Index(string? searchQuery)
         {
-            var userRole = _dbContext.Users
+            var userRoles = _dbContext.Users
                 .Join
                     (
                         _dbContext.UserRoles,
@@ -47,14 +48,50 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         r => r.Id,
                         (ur, r) => new User { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserName = ur.UserName, UserType = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
                     );
+            List<string> rolesList = new List<string>();
+            foreach (User user in userRoles)
+            {
+                var roleName = user.UserType;
+                var roleId = _roleManager.Roles.Where(r => r.Name == roleName).Select(r => r.Id).Single();
 
-            return View(userRole);
+                if (roleName.Contains("Admin"))
+                {
+                    rolesList.Add(user.UserId);
+                }
+            };
+            ViewBag.Admins = rolesList;
+
+
+            if (!String.IsNullOrWhiteSpace(searchQuery))
+            {
+                userRoles = userRoles.Where(ur => ur.UserName.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            return View(userRoles);
         }
 
         // GET: AdminController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(string id)
         {
-            return View();
+            //Todo: provjera ako user ne postoji
+
+            var user = _userManager.Users.Where(u => u.Id == id).FirstOrDefault();
+
+            var roleNameByIds = await _userManager.GetRolesAsync(user);
+            var roleName = roleNameByIds.SingleOrDefault();
+
+            var userModel = new User 
+            {
+                UserType = roleName,
+                UserName = user.UserName, 
+                Email = user.Email, 
+                FirstName = user.FirstName,
+                LastName = user.LastName, 
+                UserId = user.Id,
+                Address = user.Address,
+                EmailConfirmed = user.EmailConfirmed
+            };
+            return View(userModel);
         }
 
         // GET: AdminController/Create
@@ -209,18 +246,54 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         }
 
         // GET: AdminController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(string id)
         {
-            return View();
+
+            var user = _userManager.Users.Where(u => u.Id == id).FirstOrDefault();
+
+            var roleNameByIds = await _userManager.GetRolesAsync(user);
+            var roleName = roleNameByIds.SingleOrDefault();
+
+            var userModel = new User
+            {
+                UserType = roleName,
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                UserId = user.Id,
+                Address = user.Address,
+                EmailConfirmed = user.EmailConfirmed
+            };
+
+            return View(userModel);
         }
 
         // POST: AdminController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<ActionResult> Delete(string id, User user)
         {
             try
             {
+                if (id != user.UserId)
+                {
+                    return NotFound();
+                }
+
+
+                var findUser = _userManager.Users.Where(u => u.Id == id).FirstOrDefault();
+
+                var rolesForUser = await _userManager.GetRolesAsync(findUser);
+                var roleForUser = rolesForUser.SingleOrDefault();
+                var role = _dbContext.Roles.Where(r => r.Name == roleForUser).Select(r => r.Id);
+
+                if (findUser != null && roleForUser != null)
+                {
+                    await _userManager.RemoveFromRoleAsync(findUser, roleForUser);
+                    await _userManager.DeleteAsync(findUser);
+                   
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch
