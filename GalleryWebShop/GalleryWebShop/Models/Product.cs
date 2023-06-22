@@ -30,10 +30,12 @@ namespace GalleryWebShop.Models
         public string? Description { get; set; }
 
         [Required]
+        [Display(Name = "In Stock")]
         [Column(TypeName = "decimal(9,2)")]
         public decimal InStock { get; set; } = 0;
 
         [Required]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:c}")]
         [Column(TypeName = "decimal(9,2)")]
         public decimal Price { get; set; } = 0.00M;
 

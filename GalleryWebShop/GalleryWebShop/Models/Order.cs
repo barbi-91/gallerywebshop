@@ -11,6 +11,7 @@ namespace GalleryWebShop.Models
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Date Created")]
         [Column(TypeName = "datetime")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 

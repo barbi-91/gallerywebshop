@@ -8,7 +8,7 @@
 
 <div class="text-center">
     <h1>@ViewData["Title"]</h1>
-    <p>@ViewData["Description"]</p>
+    <p><b>@ViewData["Description"]</b></p>
 </div>
 
 
@@ -18,7 +18,6 @@
     <div class="col-6">
         <input placeholder="Search..." type="text" class="form-control" name="searchQuery" />
     </div>
-
     <div class="col-3">
         <select class="form-select" id="floatingSelect" name="categoryId">
             <option selected value="0">All categories</option>
@@ -29,7 +28,6 @@
 
         </select>
     </div>
-
     <div class="col-3">
         <select class="form-select" name="orderBy">
             <option value="0">Default</option>
@@ -39,7 +37,6 @@
             <option value="4">Price (3,2,1)</option>
         </select>
     </div>
-
     <div class="col-3">
         <input type="submit" class="btn btn-success" value="Search..." />
     </div>
@@ -75,7 +72,7 @@
                     <p>
                         <a asp-controller="Home" asp-action="Details" asp-route-itemId="@item.Id">Details</a>
                     </p>
-                    
+
                 </div>
             </div>
         </div>

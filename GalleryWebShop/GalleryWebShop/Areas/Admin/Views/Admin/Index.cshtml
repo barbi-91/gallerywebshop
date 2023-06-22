@@ -1,4 +1,4 @@
-﻿@using GalleryWebShop.Areas.Identity.Models;
+﻿﻿@using GalleryWebShop.Areas.Identity.Models;
 
 
 @model IEnumerable<User>
@@ -44,11 +44,10 @@
             <td>
                 <a class="btn btn-sm btn-info" asp-asp-area="admin" asp-controller="Admin" asp-action="Details" asp-route-id="@user.UserId">Details</a>
                 <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
-                <a 
-                @if(ViewBag.Admins != null)
-                {
-                    @(ViewBag.Admins.Contains(user.UserId) ? "hidden" : "" )
-                }
+                <a style="visibility: @if(ViewBag.Admins != null)
+               {
+               @(ViewBag.Admins.Contains(user.UserId) ? "hidden" : "visible" )
+               }"
                class="btn btn-sm btn-danger" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">Delete</a>
             </td>
         </tr>
@@ -56,4 +55,3 @@
 </table>
 
 
-@*Todo: ako admin tada nema delete gumba*@

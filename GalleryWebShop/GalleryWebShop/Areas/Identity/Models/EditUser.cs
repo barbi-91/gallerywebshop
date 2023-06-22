@@ -11,10 +11,6 @@ namespace GalleryWebShop.Areas.Identity.Models
         [Column(TypeName = "nvarchar(256)")]
         public string? UserId { get; set; }
 
-        //[Required]
-        //[Column(TypeName = "nvarchar(256)")]
-        //public string UserType { get; set; }
-
         [Required]
         [Column(TypeName = "nvarchar(256)")]
         public string UserName { get; set; }
