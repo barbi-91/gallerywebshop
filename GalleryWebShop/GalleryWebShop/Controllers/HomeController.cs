@@ -21,14 +21,14 @@ namespace GalleryWebShop.Controllers
 
         public IActionResult Index(string? searchQuery, int? categoryId, int orderBy = 0)
         {
-            // Show all products from database table 
-            List<Product> products = _dbContext.Products.ToList();
-
-            //If param "category" is not 0, filter product by category
-            if(categoryId > 0)
+            List<Product> products = new List<Product>();
+            // 1. If param "category" is not 0, filter product by category
+            if (categoryId > 0)
             {
+                products = _dbContext.Products.ToList();
+
                 products = products
-                    .Where(p => 
+                    .Where(p =>
                         _dbContext.ProductCategories
                         .Where(pc => pc.CategoryId == categoryId)
                         .Select(pc => pc.ProductId)
@@ -36,12 +36,11 @@ namespace GalleryWebShop.Controllers
                         .Contains(p.Id))
                     .ToList();
             }
-
             // 2. If parameter "serachQuery" not empty and not null,search for the keyword in the title
-            if (!String.IsNullOrWhiteSpace(searchQuery))
+            else if (!String.IsNullOrWhiteSpace(searchQuery))
             {
                 //search by title
-                products = products.Where(p => p.Title.ToLower().Contains(searchQuery.ToLower())).ToList();
+                products = _dbContext.Products.Where(p => p.Title.ToLower().Contains(searchQuery.ToLower())).ToList();
             }
 
             //0 -default values
@@ -49,13 +48,21 @@ namespace GalleryWebShop.Controllers
             //2 -sort by title descending  
             //3 -sort by price in ascending order
             //4 -sort by price descending
-            switch (orderBy)
+            else if (orderBy >= 1 && orderBy <= 4)
             {
-                case 1: products = products.OrderBy(p => p.Title).ToList(); break;
-                case 2: products = products.OrderByDescending(p => p.Title).ToList(); break;
-                case 3: products = products.OrderBy(p => p.Price).ToList(); break;
-                case 4: products = products.OrderByDescending(p => p.Price).ToList(); break;
-                default: break;
+                switch (orderBy)
+                {
+                    case 1: products = _dbContext.Products.OrderBy(p => p.Title).ToList(); break;
+                    case 2: products = _dbContext.Products.OrderByDescending(p => p.Title).ToList(); break;
+                    case 3: products = _dbContext.Products.OrderBy(p => p.Price).ToList(); break;
+                    case 4: products = _dbContext.Products.OrderByDescending(p => p.Price).ToList(); break;
+                    default: break;
+                }
+            }
+            else 
+            {
+                // Show 10 products from database table rendomly
+                products = _dbContext.Products.OrderBy(r => Guid.NewGuid()).Take(10).ToList();
             }
 
 

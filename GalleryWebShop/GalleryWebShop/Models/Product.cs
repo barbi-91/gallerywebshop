@@ -20,6 +20,12 @@ namespace GalleryWebShop.Models
         public string Sku { get; set; }
 
         [Required]
+        [StringLength(10, MinimumLength = 1)]
+        [Column(TypeName = "nvarchar(10)")]
+        public string Size { get; set; }
+
+
+        [Required]
         [StringLength(256, MinimumLength = 2)]
         [Column(TypeName = "nvarchar")]
         [DisplayName("Painting title")]

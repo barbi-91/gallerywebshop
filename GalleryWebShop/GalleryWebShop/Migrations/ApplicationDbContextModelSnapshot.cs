@@ -17,7 +17,7 @@ namespace GalleryWebShop.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.16")
+                .HasAnnotation("ProductVersion", "6.0.18")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -104,7 +104,7 @@ namespace GalleryWebShop.Migrations
                             Id = "a7966536-0d4c-4a62-ae00-88a09ab5a000",
                             AccessFailedCount = 0,
                             Address = "Ulica grada Vukovara 22",
-                            ConcurrencyStamp = "9808f0f1-d5a4-4a35-b250-ba55321d4012",
+                            ConcurrencyStamp = "a0767e5b-4f98-469d-bd06-5d23d7af58cd",
                             Email = "ana@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Ana",
@@ -112,12 +112,57 @@ namespace GalleryWebShop.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ANA@GMAIL.COM",
                             NormalizedUserName = "ANA@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEG0OTVQJ4Spr0a2svTcWhyUkrnqhD2gwXXZ4XvhVoDKXPwKcP1Naq5vEJW9VXVJ9mA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEImmSwXAi4kak+DaDQCTus1LPhasyuOM82oyYXU8iciB6jwPULe0cNCAam8eK/QoCw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9c4165e4-99c8-4a35-a867-6eb0e154fb2c",
+                            SecurityStamp = "e849043d-8466-4844-8669-da8d3958daca",
                             TwoFactorEnabled = false,
                             UserName = "ana@gmail.com"
                         });
+                });
+
+            modelBuilder.Entity("GalleryWebShop.Areas.Identity.Models.User", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordConfirmation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("GalleryWebShop.Models.Category", b =>
@@ -280,6 +325,11 @@ namespace GalleryWebShop.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(9,2)");
 
+                    b.Property<string>("Size")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
                     b.Property<string>("Sku")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -302,6 +352,7 @@ namespace GalleryWebShop.Migrations
                             Image = "",
                             InStock = 1m,
                             Price = 250.00m,
+                            Size = "30x45",
                             Sku = "1dfd314716",
                             Title = "Seascape 001"
                         },
@@ -312,6 +363,7 @@ namespace GalleryWebShop.Migrations
                             Image = "",
                             InStock = 1m,
                             Price = 320.00m,
+                            Size = "30x30",
                             Sku = "4632ec6f16",
                             Title = "Bird 001"
                         });
@@ -370,14 +422,14 @@ namespace GalleryWebShop.Migrations
                         new
                         {
                             Id = "cd565eeb-2aa6-4d57-b195-61fc9aa24d7b",
-                            ConcurrencyStamp = "fb4d7694-c637-4cc0-beb3-6405f7c01c9e",
+                            ConcurrencyStamp = "bff3aba9-7176-48c0-a860-d21c6bab6a7d",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "eb4dfb7e-763f-4109-8de3-fd3e59219d80",
-                            ConcurrencyStamp = "06ee7cdc-9e72-461e-b926-aae21981ace6",
+                            ConcurrencyStamp = "9863ec43-62b8-4242-87af-d19e8e2c9fec",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });

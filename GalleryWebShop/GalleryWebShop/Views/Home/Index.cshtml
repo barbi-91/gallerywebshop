@@ -47,7 +47,7 @@
 <div class="row">
     @foreach (var item in Model)
     {
-        <div class="card col-4 mb-3">
+        <div class="card col-4 mb-3" style="padding: 6px">
             <div class="card">
                 @{
                     string setImage = !String.IsNullOrEmpty(item.Image) ? "~/images/products/" + item.Image : "~/images/default-placeholder.png";
@@ -58,19 +58,20 @@
                 <div class="card-body">
                     <h5 class="card-title">@item.Title</h5>
                     <p class="card-text">@item.Description</p>
+                    <p class="card-text">Size: @item.Size</p>
                     <p class="card-text">@item.Price.ToString("C2")</p>
 
                     <p>
                         <form method="POST" asp-area="" asp-controller="Cart" asp-action="AddToCart">
                             <input type="hidden" name="productId" value="@item.Id" />
-                            <input type="number" name="quantity" class="form-control" , min="1.00" , max="@item.InStock" value="1.00" />
+                            <input type="number" name="quantity" class="form-control" , min="1" , max="@item.InStock" value="1" />
                             <button type="submit" class="btn btn-success">
                                 Add to cart
                             </button>
                         </form>
                     </p>
                     <p>
-                        <a asp-controller="Home" asp-action="Details" asp-route-itemId="@item.Id">Details</a>
+                        <a class="btn btn-sm btn-info" asp-controller="Home" asp-action="Details" asp-route-itemId="@item.Id">Details</a>
                     </p>
 
                 </div>

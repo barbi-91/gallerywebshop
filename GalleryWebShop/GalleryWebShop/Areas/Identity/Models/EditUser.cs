@@ -12,10 +12,6 @@ namespace GalleryWebShop.Areas.Identity.Models
         public string? UserId { get; set; }
 
         [Required]
-        [Column(TypeName = "nvarchar(256)")]
-        public string UserName { get; set; }
-
-        [Required]
         [RegularExpression("^[a-zA-Z0-9_\\.-]+@([a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$", ErrorMessage = "E-mail is not valid")]
         public string Email { get; set; }
 

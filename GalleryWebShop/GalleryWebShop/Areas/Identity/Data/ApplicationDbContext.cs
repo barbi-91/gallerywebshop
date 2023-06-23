@@ -43,7 +43,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             InStock = 1,
             Price = 250.00M,
             Title = "Seascape 001",
-            Sku = "1dfd314716"
+            Sku = "1dfd314716",
+            Size = "30x45"
         };
         Product bird = new Product()
         {
@@ -53,7 +54,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
             InStock = 1,
             Price = 320.00M,
             Title = "Bird 001",
-            Sku = "4632ec6f16"
+            Sku = "4632ec6f16",
+            Size = "30x30"
         };
                
         builder.Entity<Product>().HasData(sea, bird);

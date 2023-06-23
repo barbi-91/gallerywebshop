@@ -58,7 +58,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Sku,Title,Description,InStock,Price,Image")] Product product,
+            [Bind("Id,Sku,Title,Size,Description,InStock,Price,Image")] Product product,
             int[] categoryIds,
             IFormFile Image)
         {
@@ -147,7 +147,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Sku,Title,Description,InStock,Price,Image")] Product product,
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Sku,Title,Size,Description,InStock,Price,Image")] Product product,
             int[] categoryIds,
             IFormFile? newImage
             )

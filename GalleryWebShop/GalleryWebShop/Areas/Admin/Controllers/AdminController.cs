@@ -39,14 +39,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         _dbContext.UserRoles,
                         u => u.Id,
                         ur => ur.UserId,
-                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.UserName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
+                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
                     )
                .Join
                     (
                         _dbContext.Roles,
                         ur => ur.RoleId,
                         r => r.Id,
-                        (ur, r) => new User { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserName = ur.UserName, UserType = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
+                        (ur, r) => new User { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserType = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
                     );
             List<string> rolesList = new List<string>();
             foreach (User user in userRoles)
@@ -64,7 +64,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
 
             if (!String.IsNullOrWhiteSpace(searchQuery))
             {
-                userRoles = userRoles.Where(ur => ur.UserName.ToLower().Contains(searchQuery.ToLower()));
+                userRoles = userRoles.Where(ur => ur.FirstName.ToLower().Contains(searchQuery.ToLower()));
             }
 
             return View(userRoles);
@@ -83,13 +83,12 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             var userModel = new User 
             {
                 UserType = roleName,
-                UserName = user.UserName, 
                 Email = user.Email, 
                 FirstName = user.FirstName,
                 LastName = user.LastName, 
                 UserId = user.Id,
                 Address = user.Address,
-                EmailConfirmed = user.EmailConfirmed
+                EmailConfirmed = user.EmailConfirmed,                
             };
             return View(userModel);
         }
@@ -114,12 +113,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 {
                     ApplicationUser appUser = new ApplicationUser()
                     {
-                        UserName = user.UserName,
+                        UserName = user.Email,
+                        NormalizedUserName = user.Email.ToUpper(),
                         Email = user.Email,
                         FirstName = user.FirstName,
                         LastName = user.LastName,
                         Address = user.Address,
-                        EmailConfirmed = user.EmailConfirmed
+                        EmailConfirmed = user.EmailConfirmed,
+                        
                     };
 
                     IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
@@ -156,14 +157,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         _dbContext.UserRoles,
                         u => u.Id,
                         ur => ur.UserId,
-                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.UserName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
+                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
                     )
                .Join
                     (
                         _dbContext.Roles,
                         ur => ur.RoleId,
                         r => r.Id,
-                        (ur, r) => new EditUser { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserName = ur.UserName, /*UserType = r.Name,*/ Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
+                        (ur, r) => new EditUser { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
                     )
                 .Where(uIdr => uIdr.UserId == id).FirstOrDefault();
 
@@ -199,7 +200,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // POST: AdminController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult>Edit(string id, [Bind("UserId,UserName,Email,EmailConfirmed, FirstName,LastName,Address")]
+        public async Task<ActionResult>Edit(string id, [Bind("UserId,Email,EmailConfirmed,FirstName,LastName,Address")]
             EditUser user,
             string roleId)
         {
@@ -221,7 +222,6 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     }
 
                     //Update user
-                    userById.UserName = user.UserName;
                     userById.Email = user.Email;
                     userById.EmailConfirmed = user.EmailConfirmed;
                     userById.FirstName = user.FirstName;
@@ -257,7 +257,6 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             var userModel = new User
             {
                 UserType = roleName,
-                UserName = user.UserName,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
