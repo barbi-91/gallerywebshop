@@ -1,9 +1,10 @@
 ﻿using GalleryWebShop.Areas.Identity.Data;
+using GalleryWebShop.Areas.Identity.Models;
 using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using GalleryWebShop.Areas.Identity.Models;
+using System.Reflection.Emit;
 
 namespace GalleryWebShop.Data;
 
@@ -23,7 +24,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        base.OnModelCreating(builder);
+
         // Customize the ASP.NET Identity model and override the defaults if needed.
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
@@ -111,9 +112,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                     RoleId = adminRoleId
                 }
             );
-
+        builder.Entity<User>().ToTable(nameof(Areas.Identity.Models.User), t => t.ExcludeFromMigrations());
+        builder.Entity<EditUser>().ToTable(nameof(EditUser), t => t.ExcludeFromMigrations()).HasNoKey();
         base.OnModelCreating(builder);
     }
-
-    public DbSet<GalleryWebShop.Areas.Identity.Models.User>? User { get; set; }
 }

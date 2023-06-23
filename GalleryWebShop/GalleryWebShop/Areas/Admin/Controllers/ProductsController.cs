@@ -1,4 +1,5 @@
-﻿using GalleryWebShop.Data;
+﻿using GalleryWebShop.Common;
+using GalleryWebShop.Data;
 using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -73,6 +74,8 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    Helper.TrimStringProperties(product);
+
                     // Store image file in folder using path
                     var getFimeExtension = Path.GetExtension(Image.FileName);
                     var imageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss") + "_" +
@@ -170,6 +173,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    Helper.TrimStringProperties(product);
                     if (newImage != null)
                     {
                         var newImageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss") + "_" +

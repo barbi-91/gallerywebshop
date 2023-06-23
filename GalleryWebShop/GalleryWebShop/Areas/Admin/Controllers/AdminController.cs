@@ -1,16 +1,11 @@
-﻿using Castle.Core.Internal;
-using GalleryWebShop.Areas.Identity.Data;
+﻿using GalleryWebShop.Areas.Identity.Data;
 using GalleryWebShop.Areas.Identity.Models;
+using GalleryWebShop.Common;
 using GalleryWebShop.Data;
-using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
 
 namespace GalleryWebShop.Areas.Admin.Controllers
 {
@@ -111,6 +106,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 ViewBag.Roles = _roleManager.Roles.ToList();
                 if (ModelState.IsValid)
                 {
+                    Helper.TrimStringProperties(user);
                     ApplicationUser appUser = new ApplicationUser()
                     {
                         UserName = user.Email,
@@ -212,6 +208,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 }
                 if (ModelState.IsValid)
                 {
+                    Helper.TrimStringProperties(user);
                     var userById = await _userManager.FindByIdAsync(user.UserId);
                     //remove old role
                     var oldRoleNames = await _userManager.GetRolesAsync(userById);

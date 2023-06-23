@@ -16,26 +16,6 @@ namespace GalleryWebShop.Migrations
                 nullable: false,
                 defaultValue: "");
 
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    UserId = table.Column<string>(type: "nvarchar(256)", nullable: false),
-                    UserType = table.Column<string>(type: "nvarchar(256)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(256)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordConfirmation = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(256)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(256)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(256)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.UserId);
-                });
-
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
@@ -74,9 +54,6 @@ namespace GalleryWebShop.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "User");
-
             migrationBuilder.DropColumn(
                 name: "Size",
                 table: "Products");
