@@ -19,8 +19,5 @@ namespace GalleryWebShop.Models
         [Column(TypeName = "ntext")]
         [DisplayName("Technique description")]
         public string? Description { get; set; }
-
-        [Column(TypeName = "nvarchar(200)")]
-        public string? Image { get; set; }
     }
 }

@@ -30,8 +30,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
         // Add your customizations after calling base.OnModelCreating(builder);
 
         // Data seeding for table Category
-        Category acrylic = new Category() { Id = 1, Description = "Acrylic paints are water-based and acrylic paint tends to be more vibrant in color due to its fast dry time.", Title = "Acril", Image = "" };
-        Category oil = new Category() { Id = 2, Description = "A type of paint that dries slowly and consists of pigment particles suspended in oil for drying, mostly linseed oil.", Title = "Oil", Image = "" };
+        Category acrylic = new Category() { Id = 1, Description = "Acrylic paints are water-based and acrylic paint tends to be more vibrant in color due to its fast dry time.", Title = "Acril"};
+        Category oil = new Category() { Id = 2, Description = "A type of paint that dries slowly and consists of pigment particles suspended in oil for drying, mostly linseed oil.", Title = "Oil"};
 
         builder.Entity<Category>().HasData(acrylic, oil);
 

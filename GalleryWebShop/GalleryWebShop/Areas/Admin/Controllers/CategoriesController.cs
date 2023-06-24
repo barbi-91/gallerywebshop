@@ -55,7 +55,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Image")] Category category)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description")] Category category)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Image")] Category category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description")] Category category)
         {
             if (id != category.Id)
             {
