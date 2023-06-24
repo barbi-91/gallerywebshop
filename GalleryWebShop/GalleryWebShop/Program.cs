@@ -12,15 +12,9 @@ namespace GalleryWebShop
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var connectionString = "";
-            if (!builder.Environment.IsEnvironment("Production"))
-            {
-                connectionString = builder.Configuration.GetConnectionString("Default");
-            }
-            else
-            {
-                connectionString = Environment.GetEnvironmentVariable("WEB_MODUL9_CONN_STRING");
-            }
+            
+             var connectionString = builder.Configuration.GetConnectionString("Default");
+            
 
             //Service for creating context class object resources
             builder.Services.AddDbContext<ApplicationDbContext>(
