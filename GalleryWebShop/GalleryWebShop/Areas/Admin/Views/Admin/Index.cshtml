@@ -22,12 +22,13 @@
 <hr />
 <table class="table table-sm table-bordered">
     <tr>
-        <th>User Type</th>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Email</th>
-        <th>Address</th>
-        <th>Email Confirmed</th>
+        <th>@Html.DisplayNameFor(model => model.UserType)</th>
+        <th>@Html.DisplayNameFor(model => model.FirstName)</th>
+        <th>@Html.DisplayNameFor(model => model.LastName)</th>
+        <th>@Html.DisplayNameFor(model => model.Email)</th>
+        <th>@Html.DisplayNameFor(model => model.Address)</th>
+        <th>@Html.DisplayNameFor(model => model.EmailConfirmed)</th>
+        <th>@Html.DisplayNameFor(model => model.Image)</th>
         <th></th>
     </tr>
     @foreach (User user in Model)
@@ -39,6 +40,7 @@
             <td>@user.Email</td>
             <td>@user.Address</td>
             <td>@Html.CheckBoxFor(u => user.EmailConfirmed, new { @disabled = "disabled"})</td>
+            <td>@user.Image</td>
             <td>
                 <a class="btn btn-sm btn-info" asp-asp-area="admin" asp-controller="Admin" asp-action="Details" asp-route-id="@user.UserId">Details</a>
                 <a class="btn btn-sm btn-primary" asp-asp-area="admin" asp-controller="Admin" asp-action="Edit" asp-route-id="@user.UserId">Edit</a>
@@ -48,6 +50,7 @@
                }"
                class="btn btn-sm btn-danger" title="Delete" asp-asp-area="admin" asp-controller="Admin" asp-action="Delete" asp-route-id="@user.UserId">X</a>
             </td>
+            
         </tr>
     }
 </table>

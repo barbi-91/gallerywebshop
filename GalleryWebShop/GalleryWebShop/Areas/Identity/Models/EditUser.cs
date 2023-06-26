@@ -28,5 +28,8 @@ namespace GalleryWebShop.Areas.Identity.Models
         [Column(TypeName = "nvarchar(256)")]
         public string Address { get; set; }
 
+        [Column(TypeName = "nvarchar(200)")]
+        public string? Image { get; set; }
+
     }
 }

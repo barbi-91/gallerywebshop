@@ -2,9 +2,11 @@
 using GalleryWebShop.Areas.Identity.Models;
 using GalleryWebShop.Common;
 using GalleryWebShop.Data;
+using GalleryWebShop.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace GalleryWebShop.Areas.Admin.Controllers
@@ -34,14 +36,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         _dbContext.UserRoles,
                         u => u.Id,
                         ur => ur.UserId,
-                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
+                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId, u.Image }
                     )
                .Join
                     (
                         _dbContext.Roles,
                         ur => ur.RoleId,
                         r => r.Id,
-                        (ur, r) => new User { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserType = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
+                        (ur, r) => new User { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, UserType = r.Name, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId, Image = ur.Image}
                     );
             List<string> rolesList = new List<string>();
             foreach (User user in userRoles)
@@ -83,7 +85,8 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 LastName = user.LastName, 
                 UserId = user.Id,
                 Address = user.Address,
-                EmailConfirmed = user.EmailConfirmed,                
+                EmailConfirmed = user.EmailConfirmed,
+                Image = user.Image
             };
             return View(userModel);
         }
@@ -99,13 +102,35 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // POST: AdminController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(User user)
+        public async Task<IActionResult> Create(User user, IFormFile? Image)
         {
             try
             {
                 ViewBag.Roles = _roleManager.Roles.ToList();
+
                 if (ModelState.IsValid)
                 {
+                    if (Image != null)
+                    {
+                        // Store image file in folder using path
+                        var getFimeExtension = Path.GetExtension(Image.FileName);
+                        var imageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss") + "_" +
+                               Image.FileName.ToLower().Replace(" ", "_");
+
+                        var saveImagePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot/images/users",
+                            imageName
+                            );
+                        //Creating Directory using path
+                        Directory.CreateDirectory(Path.GetDirectoryName(saveImagePath));
+                        using (var stream = new FileStream(saveImagePath, FileMode.Create))
+                        {
+                            Image.CopyTo(stream);
+                        }
+                        // Store only the file name in the table column
+                        user.Image = imageName;
+                    }
                     Helper.TrimStringProperties(user);
                     ApplicationUser appUser = new ApplicationUser()
                     {
@@ -116,7 +141,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         LastName = user.LastName,
                         Address = user.Address,
                         EmailConfirmed = user.EmailConfirmed,
-                        
+                        Image = user.Image
                     };
 
                     IdentityResult result = await _userManager.CreateAsync(appUser, user.Password);
@@ -153,14 +178,14 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         _dbContext.UserRoles,
                         u => u.Id,
                         ur => ur.UserId,
-                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId }
+                        (u, ur) => new { u.Email, u.FirstName, u.LastName, u.Address, u.EmailConfirmed, ur.RoleId, ur.UserId, u.Image}
                     )
                .Join
                     (
                         _dbContext.Roles,
                         ur => ur.RoleId,
                         r => r.Id,
-                        (ur, r) => new EditUser { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId }
+                        (ur, r) => new EditUser { Email = ur.Email, FirstName = ur.FirstName, LastName = ur.LastName, Address = ur.Address, EmailConfirmed = ur.EmailConfirmed, UserId = ur.UserId, Image = ur.Image }
                     )
                 .Where(uIdr => uIdr.UserId == id).FirstOrDefault();
 
@@ -196,8 +221,9 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // POST: AdminController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult>Edit(string id, [Bind("UserId,Email,EmailConfirmed,FirstName,LastName,Address")]
-            EditUser user,
+        public async Task<ActionResult>Edit(string id, [Bind("UserId,Email,EmailConfirmed,FirstName,LastName,Address,Image")]
+            EditUser user, 
+            IFormFile? newImage, 
             string roleId)
         {
             try
@@ -208,7 +234,29 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 }
                 if (ModelState.IsValid)
                 {
+                    //dohvacanje ime stare slike
+                    var oldImageName = _dbContext.Users.Where(u => u.Id == id).Select(u => u.Image).Single();
                     Helper.TrimStringProperties(user);
+
+                    if (newImage != null)
+                    {
+                        var newImageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss") + "_" +
+                            newImage.FileName.ToLower().Replace(" ", "_");
+                        var saveImagePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot/images/users",
+                            newImageName
+                            );
+
+                        Directory.CreateDirectory(Path.GetDirectoryName(saveImagePath));
+                        using (var stream = new FileStream(saveImagePath, FileMode.Create))
+                        {
+                            newImage.CopyTo(stream);
+                        }
+                        user.Image = newImageName;
+
+                    }
+
                     var userById = await _userManager.FindByIdAsync(user.UserId);
                     //remove old role
                     var oldRoleNames = await _userManager.GetRolesAsync(userById);
@@ -224,6 +272,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     userById.FirstName = user.FirstName;
                     userById.LastName = user.LastName;
                     userById.Address = user.Address;
+                    userById.Image = user.Image;
 
                     await _userManager.UpdateAsync(userById);
 
@@ -232,6 +281,22 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                     var roleName = _dbContext.Roles.Where(r => r.Id == roleId).Select(r => r.Name).Single();
 
                     await _userManager.AddToRoleAsync(userById, roleName);
+
+                    //Delete old image from folder
+                    if (!string.IsNullOrEmpty(oldImageName))
+                    {
+                        //dohvacanje putanje stare slike
+                        var getImagePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot/images/users",
+                            oldImageName
+                            );
+                        //brisanje direktorija
+                        if (System.IO.File.Exists(getImagePath))
+                        {
+                            System.IO.File.Delete(getImagePath);
+                        }
+                    }
 
                 }
                 return RedirectToAction(nameof(Index),"Admin");
@@ -288,7 +353,18 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                 {
                     await _userManager.RemoveFromRoleAsync(findUser, roleForUser);
                     await _userManager.DeleteAsync(findUser);
-                   
+
+                    if (!String.IsNullOrWhiteSpace(findUser.Image))
+                    {
+                        var deleteImageFromPath = Path.Combine(Directory.GetCurrentDirectory(),
+                           "wwwroot/images/users",
+                           findUser.Image
+                       );
+                        if (System.IO.File.Exists(deleteImageFromPath))
+                        {
+                            System.IO.File.Delete(deleteImageFromPath);
+                        }
+                    }
                 }
                 return RedirectToAction(nameof(Index));
             }

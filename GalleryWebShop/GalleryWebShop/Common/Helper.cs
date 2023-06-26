@@ -12,7 +12,10 @@
             foreach (var stringProperty in stringProperties)
             {
                 string currentValue = (string)stringProperty.GetValue(obj, null);
-                stringProperty.SetValue(obj, currentValue.Trim(), null);
+                if (!string.IsNullOrEmpty(currentValue))
+                {
+                    stringProperty.SetValue(obj, currentValue.Trim(), null);
+                }
             }
         }
     }

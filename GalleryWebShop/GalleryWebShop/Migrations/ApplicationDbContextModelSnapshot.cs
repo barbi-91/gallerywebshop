@@ -49,6 +49,9 @@ namespace GalleryWebShop.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)");
@@ -104,17 +107,18 @@ namespace GalleryWebShop.Migrations
                             Id = "a7966536-0d4c-4a62-ae00-88a09ab5a000",
                             AccessFailedCount = 0,
                             Address = "Ulica grada Vukovara 22",
-                            ConcurrencyStamp = "34e9b98f-0454-4673-a7d5-eb077ab168eb",
+                            ConcurrencyStamp = "32f21297-6c9f-48e5-b090-4e1cc0e61f5c",
                             Email = "ana@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "Ana",
+                            Image = "",
                             LastName = "Programerić",
                             LockoutEnabled = false,
                             NormalizedEmail = "ANA@GMAIL.COM",
                             NormalizedUserName = "ANA@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFtiPk5xjCy99aPGJ3loZ5SMvQdTfJ7GC9fkGsGOm1qpc+2iRIz9j6166kDBQL4Zzw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECnk/n1TW3LVUUuF1dFFf8rFaTu2rVMbnyZYKJ5/avuu27yLD6V34FpGQdb9ACHqfA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "6c9975da-c5a1-4921-a673-bbe2c2a37078",
+                            SecurityStamp = "6cd1e10f-d6bc-472a-84cf-412ea97304e2",
                             TwoFactorEnabled = false,
                             UserName = "ana@gmail.com"
                         });
@@ -136,6 +140,9 @@ namespace GalleryWebShop.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -166,6 +173,9 @@ namespace GalleryWebShop.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -440,14 +450,14 @@ namespace GalleryWebShop.Migrations
                         new
                         {
                             Id = "cd565eeb-2aa6-4d57-b195-61fc9aa24d7b",
-                            ConcurrencyStamp = "19abcbe7-2eb3-4815-bca8-00c892858a53",
+                            ConcurrencyStamp = "6b4afb71-e1f5-4135-9d32-8275ef444aeb",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "eb4dfb7e-763f-4109-8de3-fd3e59219d80",
-                            ConcurrencyStamp = "243bbf4d-fd84-4997-ad30-e542e79cac13",
+                            ConcurrencyStamp = "78ae0217-f51a-457a-84a2-a6715ed4ce8a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });

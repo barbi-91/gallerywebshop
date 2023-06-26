@@ -99,7 +99,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
                 FirstName = adminFirstName,
                 LastName = adminLastName,
                 Address = adminAddress,
-                PasswordHash = hasher.HashPassword(null, adminPassword)
+                PasswordHash = hasher.HashPassword(null, adminPassword),
+                Image = ""
             }
             );
 

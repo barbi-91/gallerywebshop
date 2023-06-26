@@ -61,7 +61,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         public async Task<IActionResult> Create(
             [Bind("Id,Sku,Title,Size,Description,InStock,Price,Image")] Product product,
             int[] categoryIds,
-            IFormFile Image)
+            IFormFile? Image)
         {
             // Check if parametar categoryIds is empty or null
             if (categoryIds.Length == 0 || categoryIds == null)
@@ -173,24 +173,32 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             {
                 try
                 {
+                    //dohvacanje ime stare slike
+                    var oldImageName = _context.Products.Where(p => p.Id == id).Select(p => p.Image).Single();
+
                     Helper.TrimStringProperties(product);
                     if (newImage != null)
                     {
+                        
+                        //postavljanje imena novoj slici sa dtumom
                         var newImageName = DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss") + "_" +
                             newImage.FileName.ToLower().Replace(" ", "_");
+                        //stvaranje putanje u www.root u folder (dajemo putanju) i ime slike
                         var saveImagePath = Path.Combine(
                             Directory.GetCurrentDirectory(),
                             "wwwroot/images/products",
                             newImageName
                             );
-
+                        //Kreiranje slike prema putanji
                         Directory.CreateDirectory(Path.GetDirectoryName(saveImagePath));
+
                         using (var stream = new FileStream(saveImagePath, FileMode.Create))
                         {
                             newImage.CopyTo(stream);
                         }
                         product.Image = newImageName;
 
+                        
                     }
                     _context.Update(product);
                     await _context.SaveChangesAsync();
@@ -207,7 +215,25 @@ namespace GalleryWebShop.Areas.Admin.Controllers
                         _context.ProductCategories.Add(productCategory);
                     }
                     _context.SaveChanges();
+
+                    //Brisanje stare slike???
+                    
+                    if (!string.IsNullOrEmpty(oldImageName))
+                    {
+                        //dohvacanje putanje stare slike
+                        var getImagePath = Path.Combine(
+                            Directory.GetCurrentDirectory(),
+                            "wwwroot/images/products",
+                            oldImageName
+                            );
+                        //brisanje direktorija
+                        if (System.IO.File.Exists(getImagePath))
+                        {
+                            System.IO.File.Delete(getImagePath);
+                        }
+                    }
                 }
+
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProductExists(product.Id))
@@ -251,6 +277,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Products'  is null.");
             }
+
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
