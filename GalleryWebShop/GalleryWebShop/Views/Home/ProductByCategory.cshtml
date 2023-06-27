@@ -16,7 +16,7 @@
                         string setImage = !String.IsNullOrEmpty(item.Product.Image) ? "~/images/products/" + item.Product.Image : "~/images/default-placeholder.png";
                     }
 
-                    <img src="@Url.Content(setImage)" class="card-img-top" alt="art image">
+                    <img src="@Url.Content(setImage)" class="card-img-top" alt="art image" height="430">
 
                     <div class="card-body">
                         <h5 class="card-title">@item.Product.Title</h5>
