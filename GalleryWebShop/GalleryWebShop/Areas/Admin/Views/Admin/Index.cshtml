@@ -7,7 +7,10 @@
 }
 
 <h1 class="bg-info text-white">All Users</h1>
-
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert-danger">@ViewBag.ErrorMessage</p>
+}
 
 <form method="get" asp-area="Admin" asp-controller="Admin" asp-action="Index" class="row mb-5">
     <div class="col-6">

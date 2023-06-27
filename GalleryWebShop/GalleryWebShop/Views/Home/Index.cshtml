@@ -1,6 +1,4 @@
 ﻿@model IList<GalleryWebShop.Models.Product>
-
-
 @{
     ViewData["Title"] = "Gallery Web Shop";
     ViewData["Description"] = "Buy paintings online";
@@ -10,10 +8,10 @@
     <h1>@ViewData["Title"]</h1>
     <p><b>@ViewData["Description"]</b></p>
 </div>
-
-
-
-
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert-danger">@ViewBag.ErrorMessage</p>
+}
 <form method="get" asp-area="" asp-controller="Home" asp-action="Index" class="row mb-5">
     <div class="col-6">
         <input placeholder="Search..." type="text" class="form-control" name="searchQuery" />

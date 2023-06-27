@@ -1,7 +1,10 @@
 ﻿@model List<GalleryWebShop.Services.Cart .CartItem>
 
 <h1>Place your order</h1>
-
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert-danger">@ViewBag.ErrorMessage</p>
+}
 <hr />
 
 @*

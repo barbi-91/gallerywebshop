@@ -3,7 +3,7 @@
     public static class Helper
     {
         public static string SessionCartKey => "_cart";
-
+        
         public static void TrimStringProperties(object obj)
         {
             var stringProperties = obj.GetType().GetProperties()

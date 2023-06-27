@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<GalleryWebShop.Models.Product>
-
 @{
     ViewData["Title"] = "Paintings";
 }
 
 <h1 class="bg-info text-white">Paintings</h1>
-
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert-danger">@ViewBag.ErrorMessage</p>
+}
 <p>
     <a class="btn btn-secondary" asp-action="Create">Create New Product</a>
 </p>

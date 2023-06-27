@@ -21,33 +21,60 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         // GET: Admin/Categories
         public async Task<IActionResult> Index()
         {
-            return _context.Categories != null ?
+            try
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
+                return _context.Categories != null ?
                         View(await _context.Categories.ToListAsync()) :
                         Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
+
+            }
+            catch (Exception ex)
+            {
+                ViewBag.ErrorMessage = ex.Message;
+                return View(new List<Category>());
+            }
         }
 
         // GET: Admin/Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Categories == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null || _context.Categories == null)
+                {
+                    return NotFound();
+                }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+                var category = await _context.Categories
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+
+                return View(category);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
-
-            return View(category);
         }
 
         // GET: Admin/Categories/Create
         public IActionResult Create()
         {
-            return View();
+            try
+            {
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
+                return View();
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Admin/Categories/Create
@@ -57,30 +84,46 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Description")] Category category)
         {
-            if (ModelState.IsValid)
+            try
             {
-                Helper.TrimStringProperties(category);
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    Helper.TrimStringProperties(category);
+                    _context.Add(category);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(category);
             }
-            return View(category);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Create));
+            }
         }
 
         // GET: Admin/Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Categories == null)
+            try
             {
-                return NotFound();
-            }
+                if (id == null || _context.Categories == null)
+                {
+                    return NotFound();
+                }
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
+                var category = await _context.Categories.FindAsync(id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+                return View(category);
             }
-            return View(category);
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // POST: Admin/Categories/Edit/5
@@ -90,39 +133,58 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description")] Category category)
         {
-            if (id != category.Id)
+            try
             {
-                return NotFound();
-            }
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
 
-            if (ModelState.IsValid)
+                if (id != category.Id)
+                {
+                    return NotFound();
+                }
+
+                if (ModelState.IsValid)
+                {
+
+                    Helper.TrimStringProperties(category);
+                    _context.Update(category);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                return View(category);
+            }
+            catch (Exception ex)
             {
-
-                Helper.TrimStringProperties(category);
-                _context.Update(category);
-                await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Edit));
             }
-            return View(category);
         }
 
         // GET: Admin/Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Categories == null)
+            try
             {
-                return NotFound();
-            }
+                ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
+                if (id == null || _context.Categories == null)
+                {
+                    return NotFound();
+                }
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
+                var category = await _context.Categories
+                    .FirstOrDefaultAsync(m => m.Id == id);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+
+                return View(category);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Index));
             }
-
-            return View(category);
         }
 
         // POST: Admin/Categories/Delete/5
@@ -130,18 +192,25 @@ namespace GalleryWebShop.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Categories == null)
+            try
             {
-                return Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
+                if (_context.Categories == null)
+                {
+                    return Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
+                }
+                var category = await _context.Categories.FindAsync(id);
+                if (category != null)
+                {
+                    _context.Categories.Remove(category);
+                }
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
+            catch (Exception ex)
             {
-                _context.Categories.Remove(category);
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Delete));
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool CategoryExists(int id)

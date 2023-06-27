@@ -1,10 +1,13 @@
 ﻿@model IEnumerable<GalleryWebShop.Models.ProductCategory>
-
 @{
     ViewData["Title"] = "ProductByCategory";
 }
 
 <h1>Technique: @ViewBag.CatTitle</h1>
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert-danger">@ViewBag.ErrorMessage</p>
+}
 <hr />
 <div class="row">
     @foreach (var item in Model)

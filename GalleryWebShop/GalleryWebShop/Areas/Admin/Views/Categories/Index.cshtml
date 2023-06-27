@@ -5,7 +5,10 @@
 }
 
 <h1 class="bg-info text-white">Categories</h1>
-
+@if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
+{
+    <p class="alert-danger">@ViewBag.ErrorMessage</p>
+}
 <p>
     <a class="btn btn-secondary" asp-action="Create">Create New Category</a>
 </p>

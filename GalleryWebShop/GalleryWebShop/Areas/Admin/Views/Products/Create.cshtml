@@ -5,14 +5,12 @@
 }
 
 <h1>Create a new product for sell</h1>
-<h4>Painting</h4>
-<hr />
-
 @if (!String.IsNullOrEmpty(ViewBag.ErrorMessage))
 {
     <p class="alert-danger">@ViewBag.ErrorMessage</p>
-} 
-
+}
+<h4>Painting</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">

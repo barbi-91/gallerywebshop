@@ -5,7 +5,7 @@ namespace GalleryWebShop.Services
 {
     public static class SessionExtensions
     {
-        //serialize
+        // Serialize
         public static void SetCartObjectAsJson(
             this ISession session,
             string key,
@@ -18,7 +18,7 @@ namespace GalleryWebShop.Services
                 );
         }
 
-        //deserialize
+        // Deserialize
         public static List<CartItem>GetCartObjectFromJson(
             this ISession session,
             string key

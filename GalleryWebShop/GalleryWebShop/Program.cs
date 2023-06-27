@@ -11,17 +11,14 @@ namespace GalleryWebShop
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var connectionString = builder.Configuration.GetConnectionString("Default");
 
-            
-             var connectionString = builder.Configuration.GetConnectionString("Default");
-            
-
-            //Service for creating context class object resources
+            // Service for creating context class object resources
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options
                 .UseSqlServer(connectionString));
 
-            //Service that the ApplicationUser class is the main one for user identification
+            // Service that the ApplicationUser class is the main one for user identification
             builder.Services.AddDefaultIdentity<ApplicationUser>(
                 options => options.SignIn.RequireConfirmedAccount = false)
             .AddRoles<IdentityRole>()
@@ -32,8 +29,6 @@ namespace GalleryWebShop
 
             // Creating a service to use RazorPageoptions
             builder.Services.AddRazorPages(); //without it the @page in login.cshtml.cs doesn't work 
-
-           
 
             //Create service for sesion
             builder.Services.AddDistributedMemoryCache();
@@ -52,8 +47,7 @@ namespace GalleryWebShop
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-
-            //application settings for handling decimal value
+            // Application settings for handling decimal value
             var ci = new CultureInfo("de-De");
             ci.NumberFormat.NumberDecimalSeparator = ".";
             ci.NumberFormat.CurrencyDecimalSeparator = ".";
@@ -69,10 +63,9 @@ namespace GalleryWebShop
 
             app.UseRouting();
             app.UseAuthentication();
-
             app.UseAuthorization();
 
-            //Aded session
+            // Aded session
             app.UseSession();
 
             // Set admin roll for area acces
