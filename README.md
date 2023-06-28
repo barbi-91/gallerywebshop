@@ -53,10 +53,9 @@ javascript, ajax calls or AngularJS, it is possible to improve the accessibility
 
 HOW TOP RUN LOCALLY  
 - 1 - download locally from git and open in Visual studio 
-- 2 - set connection string in appsettings file as well in Program.cs set Service for creating context class object resources to get connection
-- 3 - start migration in Packager Manager Console--add migration CreateDatabase to set data base and seed data
-- 4 - use update-database to create database if migration was secesfully
-- 5 - run the App
+- 2 - set connection string in appsettings file, adjust the server name
+- 3 - use update-database to create database
+- 4 - run the App
 
 MAINTENANCE AND HISTORY  
 Maintenance by Barbara Erdec Golović 2023  
