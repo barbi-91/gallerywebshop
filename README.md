@@ -27,10 +27,21 @@ Functional requirements are related to functionality of the web store itself:
 • The customer can add a specific product to the cart, increase its quantity or delete it from the cart, as well as fill in the information for 
 purchasing that product.
   
-TECHNICAL FEATURES AND DEVELOPMENT TOOLS  
-ASP.NET Core Framework Version 4.8.04084  was used in the creation of the Web Shop application technologies through the MVC 6 form and Microsoft
-Visual Studio Community 2022 Version 17.4.3 as an integrated development environment from Microsoft. HTML, CSS and Bootstrap were used to create
-the user interface. To create of dynamic Web pages with C#, the Razor -Wiew engine was used.
+DEVELOPMENT TOOLS  
+- Windows 10 Home 10.0 <X64> (Build 19045: )
+- - Microsoft Visual Studio Community 2022 Version 17.4.3 as an integrated development environment from Microsoft
+- Sql Server Menagement Studio was used to develop DDL and DML
+
+PREREQUISITES  
+- ASP.NET Core Framework Version 4.8.04084 - was used in the creation of the Web Shop application technologies through the MVC 6 with Razor view engine
+- SQL Server istance installed - developed on version: Microsoft SQL Server 2022 (RTM-GDR) (KB5021522) - 16.0.1050.5 (X64) Express Edition (64-bit)
+
+TECHNOLOGIES USED IN APPLICATION
+- NET Core Version 4.8.04084
+- C#
+- HTML, CSS and Bootstrap were used to create the user interface To create of dynamic Web pages with C#
+- TSQL (Transaction SQL)
+
 
 POINTS OF INTEREST
 * A proposal to upgrade the application to improve the user experience is the ability to log in each employee in order to have insight into his
@@ -42,7 +53,7 @@ javascript, ajax calls or AngularJS, it is possible to improve the accessibility
 
 HOW TOP RUN LOCALLY  
 - 1 - download locally from git and open in Visual studio 
-- 2 - set connection string in appsettings.Development file as well in Program.cs set Service for creating context class object resources to get connection
+- 2 - set connection string in appsettings file as well in Program.cs set Service for creating context class object resources to get connection
 - 3 - start migration in Packager Manager Console--add migration CreateDatabase to set data base and seed data
 - 4 - use update-database to create database if migration was secesfully
 - 5 - run the App
