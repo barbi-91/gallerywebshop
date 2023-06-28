@@ -11,10 +11,14 @@
 {
     <p class="alert-danger">@ViewBag.ErrorMessage</p>
 }
+@if (String.IsNullOrEmpty(ViewBag.Search) || Model.Count() == 0)
+{
+    ViewBag.Search = "Search...";
+}
 
 <form method="get" asp-area="Admin" asp-controller="Admin" asp-action="Index" class="row mb-5">
     <div class="col-6">
-        <input placeholder="Search..." type="text" class="form-control" name="searchQuery" />
+        <input placeholder="@ViewBag.Search" type="text" class="form-control" name="searchQuery"/>
     </div>
     <div class="col-3">
         <input type="submit" class="btn btn-success" value="Search" />

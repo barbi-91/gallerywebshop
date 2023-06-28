@@ -31,6 +31,7 @@ namespace GalleryWebShop.Areas.Admin.Controllers
             try
             {
                 ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
+                ViewBag.Search = searchQuery;
 
                 var userRoles = _dbContext.Users
                 .Join

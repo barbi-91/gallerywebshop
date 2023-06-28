@@ -23,14 +23,19 @@ namespace GalleryWebShop.Controllers
             try
             {
                 ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
-
+                List<Product> productsByCategory = new List<Product>();
+                List<Product> productsBySearchQuery = new List<Product>();
                 List<Product> products = new List<Product>();
+                List<Product> productsOrdered = new List<Product>();
+
+                categoryId ??= 0;
+
                 // 1. If param "category" is not 0, filter product by category
                 if (categoryId > 0)
                 {
-                    products = _dbContext.Products.ToList();
+                    productsByCategory = _dbContext.Products.ToList();
 
-                    products = products
+                    productsByCategory = productsByCategory
                         .Where(p =>
                             _dbContext.ProductCategories
                             .Where(pc => pc.CategoryId == categoryId)
@@ -39,11 +44,26 @@ namespace GalleryWebShop.Controllers
                             .Contains(p.Id))
                         .ToList();
                 }
+
                 // 2. If parameter "serachQuery" not empty and not null,search for the keyword in the title
-                else if (!String.IsNullOrWhiteSpace(searchQuery))
+                if (!String.IsNullOrWhiteSpace(searchQuery))
                 {
                     //search by title
-                    products = _dbContext.Products.Where(p => p.Title.ToLower().Contains(searchQuery.ToLower())).ToList();
+                    productsBySearchQuery = _dbContext.Products.Where(p => p.Title.ToLower().Contains(searchQuery.ToLower())).ToList();
+                }
+
+                if (categoryId > 0 && !String.IsNullOrWhiteSpace(searchQuery))
+                {
+                    products = productsByCategory.IntersectBy(productsBySearchQuery.Select(p => p.Id), p => p.Id).ToList();
+                }
+                else if (categoryId == 0 && String.IsNullOrWhiteSpace(searchQuery))
+                {
+                    // Show 10 products from database table rendomly
+                    products = _dbContext.Products.OrderBy(r => Guid.NewGuid()).Take(10).ToList();
+                }
+                else
+                {
+                    products = productsByCategory.Concat(productsBySearchQuery).ToList();
                 }
 
                 //0 -default values
@@ -51,28 +71,33 @@ namespace GalleryWebShop.Controllers
                 //2 -sort by title descending  
                 //3 -sort by price in ascending order
                 //4 -sort by price descending
-                else if (orderBy >= 1 && orderBy <= 4)
+                if (orderBy >= 1 && orderBy <= 4)
                 {
                     switch (orderBy)
                     {
-                        case 1: products = _dbContext.Products.OrderBy(p => p.Title).ToList(); break;
-                        case 2: products = _dbContext.Products.OrderByDescending(p => p.Title).ToList(); break;
-                        case 3: products = _dbContext.Products.OrderBy(p => p.Price).ToList(); break;
-                        case 4: products = _dbContext.Products.OrderByDescending(p => p.Price).ToList(); break;
-                        default: break;
+                        case 1:
+                            productsOrdered = products.OrderBy(p => p.Title).ToList();
+                            break;
+                        case 2:
+                            productsOrdered = products.OrderByDescending(p => p.Title).ToList();
+                            break;
+                        case 3:
+                            productsOrdered = products.OrderBy(p => p.Price).ToList();
+                            break;
+                        case 4:
+                            productsOrdered = products.OrderByDescending(p => p.Price).ToList();
+                            break;
                     }
                 }
                 else
                 {
-                    // Show 10 products from database table rendomly
-                    products = _dbContext.Products.OrderBy(r => Guid.NewGuid()).Take(10).ToList();
+                    productsOrdered = products;
                 }
-
 
                 ViewBag.Categories = _dbContext.Categories.ToList();
 
                 //returns collection of products
-                return View(products);
+                return View(productsOrdered);
             }
             catch (Exception ex)
             {

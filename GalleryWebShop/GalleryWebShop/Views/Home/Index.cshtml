@@ -12,6 +12,7 @@
 {
     <p class="alert-danger">@ViewBag.ErrorMessage</p>
 }
+
 <form method="get" asp-area="" asp-controller="Home" asp-action="Index" class="row mb-5">
     <div class="col-6">
         <input placeholder="Search..." type="text" class="form-control" name="searchQuery" />
@@ -28,7 +29,7 @@
     </div>
     <div class="col-3">
         <select class="form-select" name="orderBy">
-            <option value="0">Default</option>
+            <option selected value="0">Default</option>
             <option value="1">Title (A - Z)</option>
             <option value="2">Title (Z - A)</option>
             <option value="3">Price (1,2,3)</option>
@@ -36,11 +37,14 @@
         </select>
     </div>
     <div class="col-3">
-        <input type="submit" class="btn btn-success" value="Search..." />
+        <input type="submit" class="btn btn-success" value="Search" />
     </div>
 </form>
 
-
+@if (String.IsNullOrEmpty(ViewBag.On))
+{
+    ViewBag.On = "hidden";
+}
 
 <div class="row">
     @foreach (var item in Model)
