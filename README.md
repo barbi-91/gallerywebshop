@@ -54,7 +54,7 @@ javascript, ajax calls or AngularJS, it is possible to improve the accessibility
 HOW TOP RUN LOCALLY  
 - 1 - download locally from git and open in Visual studio 
 - 2 - set connection string in appsettings file, adjust the server name
-- 3 - use update-database to create database
+- 3 - In Package Manager Console write update-database to create database by existing migration
 - 4 - run the App
 
 MAINTENANCE AND HISTORY  
