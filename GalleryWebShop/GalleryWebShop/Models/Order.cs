@@ -27,7 +27,7 @@ namespace GalleryWebShop.Models
         [Column(TypeName = "decimal(9,2)")]
         public decimal Total { get; set; }
 
-        //Application User class (for registred customer)
+        //Application User class (for registeed customer)
         [ForeignKey(nameof(UserId))]
         public ApplicationUser? User { get; set; }
 

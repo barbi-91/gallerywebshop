@@ -30,7 +30,7 @@ namespace GalleryWebShop.Controllers
 
                 categoryId ??= 0;
 
-                // 1. If param "category" is not 0, filter product by category
+                // 1. If param "categoryId" is not 0, filter products by category
                 if (categoryId > 0)
                 {
                     productsByCategory = _dbContext.Products.ToList();
@@ -45,17 +45,19 @@ namespace GalleryWebShop.Controllers
                         .ToList();
                 }
 
-                // 2. If parameter "serachQuery" not empty and not null,search for the keyword in the title
+                // 2. If parameter "serachQuery" is not empty and not null,search for the keyword in the title
                 if (!String.IsNullOrWhiteSpace(searchQuery))
                 {
-                    //search by title
                     productsBySearchQuery = _dbContext.Products.Where(p => p.Title.ToLower().Contains(searchQuery.ToLower())).ToList();
                 }
 
+                // 3. If parameter "serachQuery" and "categoryId" both of is selected to search by
+                // If both of is selected - increase one by other
                 if (categoryId > 0 && !String.IsNullOrWhiteSpace(searchQuery))
                 {
                     products = productsByCategory.IntersectBy(productsBySearchQuery.Select(p => p.Id), p => p.Id).ToList();
                 }
+                // Search by keword without category selected
                 else if (categoryId == 0 && String.IsNullOrWhiteSpace(searchQuery))
                 {
                     // Show 10 products from database table rendomly
@@ -63,6 +65,7 @@ namespace GalleryWebShop.Controllers
                 }
                 else
                 {
+                    //Else if one of this is selected concat full and empty list
                     products = productsByCategory.Concat(productsBySearchQuery).ToList();
                 }
 
@@ -106,7 +109,7 @@ namespace GalleryWebShop.Controllers
             }
         }
 
-        //using navigation property with method Include to get data from related tables (foreign key)
+        // Using navigation property with method Include to get data from related tables (foreign key)
         public IActionResult ProductByCategory(int catById)
         {
             try

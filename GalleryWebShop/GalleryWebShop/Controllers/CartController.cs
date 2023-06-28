@@ -1,5 +1,6 @@
 ﻿using GalleryWebShop.Common;
 using GalleryWebShop.Data;
+using GalleryWebShop.Models;
 using GalleryWebShop.Services;
 using GalleryWebShop.Services.Cart;
 using Microsoft.AspNetCore.Mvc;
@@ -21,10 +22,10 @@ namespace DemoWebshop.Controllers
             {
                 ViewBag.ErrorMessage = TempData["ErrorMessage"] as string ?? string.Empty;
 
-                //Korak 1: Provjeri kosaricu iz sesije
+                // Check cart from session
                 List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(Helper.SessionCartKey);
 
-                // KOrak 2: Provjeri errror poruku
+                // Check error message
                 ViewBag.CartErrorMessage = TempData["CartErrorrMessage"] as string ?? string.Empty;
 
                 return View(cart);
@@ -41,58 +42,55 @@ namespace DemoWebshop.Controllers
          {
             try
             {
-                //EXTRA VALIDATION
+                //validation if quality is not lower or equal to zero
                 if (quantity <= 0)
                 {
                     return RedirectToAction(nameof(Index));
                 }
 
-                // Korak 1: provjeri ako postoji proizvod
+                // Check if the product exists
                 var findProduct = _dbContext.Products.Find(productId);
                 if (findProduct == null)
                 {
                     return RedirectToAction(nameof(Index));
                 }
 
-                // Korak 2: Provjeri sesiju
-                // ova metoda vrca ili praznu ili punu kolekciju
+                // Verify the session
                 List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(Helper.SessionCartKey);
 
-                // Korak 3: uvjeti za krositinje kosarice
+                // If cart is zero than 
                 if (cart.Count == 0)
                 {
-                    // Sto ako netko zeli vise proizvoda nego sto ih imamo dosutpno?
+                    // If input value is bigger then stock value end proces like that
                     if (quantity > findProduct.InStock)
                     {
-                        TempData["CartErrorMessage"] = $"Nije moguce dodati proizvdo u kosaricu! NA ZALIHI je dostupno {findProduct.InStock}";
+                        TempData["CartErrorMessage"] = $"It is not possible to add a product to the cart! In stock is available {findProduct.InStock}";
                         return RedirectToAction(nameof(Index));
                     }
 
-                    // Kreiraj novi objekt klase CartItem i popuni ga s podacima o proioizviodou i kolicini
+                    // Continue value of quantity is within stock quantity create new cart item
                     CartItem newItem = new CartItem()
                     {
                         Product = findProduct,
                         Quantity = quantity
                     };
-                    // Dodaj stavku u kolekciju kosarice
+                    // Add item to cart collection
                     cart.Add(newItem);
-                    //Azuriraj sesiju za kosaricu
+                    //Update session for cart 
                     HttpContext.Session.SetCartObjectAsJson(Helper.SessionCartKey, cart);
                 }
                 else
                 {
-                    //Ako proizvod nije u kosarici, kreiraj novi objekt klase CartItem , ako je u kosarici onda smao zauriraj kolicinu tog proizvoda
+                    //If product is already in cart, create new object class CartItem , else update product in cart
                     var updateOrCreateItem = cart.Find(p => p.Product.Id == productId) ?? new CartItem();
 
-                    //Provjera kolicine
-                    //Primjer 1: U kosarici imamo 2 soka od jabuke , a InStock = 5
-                    //Primjer 2: U kosarici nemamo soka od jabuke , a InStock = 3
+                    // Quantity check for update quantity with stock
                     if (quantity + updateOrCreateItem.Quantity > findProduct.InStock)
                     {
-                        TempData["CartErrorMessage"] = $"Nije moguce dodati odabranu kolicinu proizvoda. Na Zalihi je dostupno: {findProduct.InStock} proizvoda {findProduct.Title}";
+                        TempData["CartErrorMessage"] = $"It is not possible to add a product to the cart! In stock is available {findProduct.InStock} proizvoda {findProduct.Title}";
                         return RedirectToAction(nameof(Index));
                     }
-                    //Uvjet za azuiranje podataka sesije
+                    // Condition for updating session data
                     if (updateOrCreateItem.Quantity == 0)
                     {
                         updateOrCreateItem.Product = findProduct;
@@ -104,7 +102,7 @@ namespace DemoWebshop.Controllers
                         updateOrCreateItem.Quantity += quantity;
                     }
 
-                    //Azuriraj sesiju
+                    // Update session
                     HttpContext.Session.SetCartObjectAsJson(Helper.SessionCartKey, cart);
                 }
                 return RedirectToAction(nameof(Index));
@@ -121,16 +119,15 @@ namespace DemoWebshop.Controllers
         {
             try
             {
-                //Korak 1: Pronađi sesiju košarice i dodijeli je varijabli generičke kolekcije cart
+                // Find the cart session and assign it to the cart generic collection variable
                 List<CartItem> cart = HttpContext.Session.GetCartObjectFromJson(Helper.SessionCartKey);
 
-                //Korak 2: Ukloni sve proizvode koji se podudaraju s Id-em parametra(npr.: metodom RemoveAll())
+                // Remove all products that match the Id of the parameter
                 cart.RemoveAll(cartItem => cartItem.Product.Id == productId);
 
-                //Korak 3: Ažuriraj sesiju
+                // Update session
                 HttpContext.Session.SetCartObjectAsJson(Helper.SessionCartKey, cart);
 
-                //Korak 4: Vrati se na stranicu košarice
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
