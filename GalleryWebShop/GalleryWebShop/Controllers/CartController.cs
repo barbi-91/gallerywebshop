@@ -1,6 +1,5 @@
 ﻿using GalleryWebShop.Common;
 using GalleryWebShop.Data;
-using GalleryWebShop.Models;
 using GalleryWebShop.Services;
 using GalleryWebShop.Services.Cart;
 using Microsoft.AspNetCore.Mvc;

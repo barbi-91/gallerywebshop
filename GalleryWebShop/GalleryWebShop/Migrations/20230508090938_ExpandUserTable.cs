@@ -8,26 +8,44 @@ namespace GalleryWebShop.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.AddColumn<string>(
                 name: "LastName",
                 table: "AspNetUsers",
                 type: "nvarchar(256)",
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(100)",
-                oldMaxLength: 100);
+                nullable: false
+                );
+
+            migrationBuilder.AddColumn<string>(
+                name: "FirstName",
+                table: "AspNetUsers",
+                type: "nvarchar(256)",
+                nullable: false
+                );
+
+            migrationBuilder.AddColumn<string>(
+                name: "Address",
+                table: "AspNetUsers",
+                type: "nvarchar(256)",
+                nullable: false
+                );
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
+            migrationBuilder.DropColumn(
                 name: "LastName",
-                table: "AspNetUsers",
-                type: "nvarchar(100)",
-                maxLength: 100,
-                nullable: false,
-                oldClrType: typeof(string),
-                oldType: "nvarchar(256)");
+                table: "AspNetUsers"
+                );
+
+            migrationBuilder.DropColumn(
+                name: "FirstName",
+                table: "AspNetUsers"
+                );
+
+            migrationBuilder.DropColumn(
+                name: "Address",
+                table: "AspNetUsers"
+                );
         }
     }
 }
